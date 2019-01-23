@@ -2,6 +2,8 @@ import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { BluetoothSerial } from 'ionic-native';
 import { AlertController, LoadingController } from 'ionic-angular';
+import { ModalController } from 'ionic-angular';
+//import { ModalPage } from '../../contact';
 
 @Component({
   selector: 'page-home',
@@ -15,148 +17,141 @@ export class HomePage {
 
 
 	output:any;
-  message:String;
-  responseTxt:any;
-  unpairedDevices: any;
-  pairedDevices: any;
-  statusMessage: string;
-  gettingDevices: Boolean;
+	message:String;
+	responseTxt:any;
+	unpairedDevices: any;
+	pairedDevices: any;
+	statusMessage: string;
+	gettingDevices: Boolean;
+	psi: any;
+	servo: any;
+	linear: any;
+	feedback: any;
+	showPairedDevices: any;
 
-  constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone) {
-  	//this.getAllBluetoothDevices();
-  	//BluetoothSerial.enable();
-  	//MOST RECENT ATTEMPT that connects - bluetooth stops blinking
-  	this.startScanning();
-  }
-
-  // put BluetoothSerial inside a function, can't be called different
-  //this gets all available bluetooth - paired or not ORIGINAL ATTEMPT
-	getAllBluetoothDevices(){
-	    // async so keep everything in this method
-	    BluetoothSerial.isEnabled().then((data)=> {
-	        // not sure of returning value, probably a boolean
-	        console.log("dont know what it returns"+data);
-
-	        // returns all the available devices, not just the unpaired ones
-	        BluetoothSerial.list().then((allDevices) => {
-	            // set the list to returned value
-	            this.lists = allDevices;
-	            if(!(this.lists.length > 0)){
-	               this.var2 = "could not find any bluetooth devices";
-	               console.log(this.var2);
-	            }
-	            else{
-		            for(var i = 0; i < this.lists.length; i++){
-		            	console.log(this.lists[i]);
-		            }
-	            }
-	        });
-	    });
-	 }
+	constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone, public modalCtrl: ModalController) {
+		//this.getAllBluetoothDevices();
+		//BluetoothSerial.enable();
+		//MOST RECENT ATTEMPT that connects - bluetooth stops blinking
+		this.startScanning();
+		//this.presentModal();
+	}
 
 	 startScanning() {
-    this.pairedDevices = null;
-    this.unpairedDevices = null;
-    this.gettingDevices = true;
-    BluetoothSerial.discoverUnpaired().then((success) => {
-      this.unpairedDevices = success;
-      this.gettingDevices = false;
-      success.forEach(element => {
-        console.log("Element found: " + element);
-        
-      });
-    },
-      (err) => {
-        console.log(err);
-      })
+	    this.pairedDevices = null;
+	    this.gettingDevices = true;
+	    BluetoothSerial.list().then((success) => {
+	      this.pairedDevices = success;
+	      this.showPairedDevices = true;
+	    },
+	      (err) => {
 
-    BluetoothSerial.list().then((success) => {
-      this.pairedDevices = success;
-      console.log("successfully paired");
-      this.selectDevice(this.pairedDevices[0].address);
-    },
-      (err) => {
+	      })
+	}
 
-      })
-  }
-  success = (data) => alert(data);
-  fail = (error) => alert(error);
+	/*presentModal() {
+	    const modal = this.modalCtrl.create(ModalPage);
+	    modal.present();
+	}*/
 
-  selectDevice(address: any) {
-  	console.log("giving bluetooth options");
-    let alert = this.alertCtrl.create({
-      title: 'Connect',
-      message: 'Do you want to connect with' + address + '?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: 'Connect',
-          handler: () => {
-            BluetoothSerial.connect(address).subscribe(this.success, this.fail);
-        
-          }
-        }
-      ]
-    });
-    alert.present(
-      
-    );
-  }
+	success = (data) => alert(data);
+	fail = (error) => alert(error);
 
- disconnect() {
-    let alert = this.alertCtrl.create({
-      title: 'Disconnect?',
-      message: 'Do you want to Disconnect?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-            alert.dismiss();
-          }
-        },
-        {
-          text: 'Disconnect',
-          handler: () => {
-            BluetoothSerial.disconnect();
-            this.gettingDevices=null;
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
-  next(){
-    this.navCtrl.push('TerminalPage');
-  }
+	selectDevice(address: any, name: any) {
+		console.log("giving bluetooth options");
+		let alert = this.alertCtrl.create({
+		  title: 'Connect',
+		  message: 'Do you want to connect with' + name + '?',
+		  buttons: [
+		    {
+		      text: 'Cancel',
+		      role: 'cancel',
+		      handler: () => {
+		        console.log('Cancel clicked');
+		      }
+		    },
+		    {
+		      text: 'Connect',
+		      handler: () => {
+		        BluetoothSerial.connect(address).subscribe((success) => {
+		  		//this.sendData();
+		},
+		  (err) => {
 
- data(){
-        setInterval(()=>{
-          this.read1();
-        } ,3000);
+		  })
+		    
+		      }
+		    }
+		  ]
+		});
+		alert.present(
+		  
+		);
+	}
 
-        
-      }
-      
+	disconnect() {
+		let alert = this.alertCtrl.create({
+		  title: 'Disconnect?',
+		  message: 'Do you want to Disconnect?',
+		  buttons: [
+		    {
+		      text: 'Cancel',
+		      role: 'cancel',
+		      handler: () => {
+		        alert.dismiss();
+		      }
+		    },
+		    {
+		      text: 'Disconnect',
+		      handler: () => {
+		        BluetoothSerial.disconnect();
+		        this.gettingDevices=null;
+		      }
+		    }
+		  ]
+		});
+		alert.present();
+	}
 
-read(){
-  BluetoothSerial.read().then((data)=>
-  {
-   this.message=data;
-    
-    })
-   
-}
-read1(){
-  this.ngZone.run(()=>{
-    this.read();
-  })
-}
+	next(){
+		this.navCtrl.push('TerminalPage');
+	}
+
+	data(){
+	    setInterval(()=>{
+	      this.read1();
+	    } ,3000);
+	}
+
+	read(){
+		BluetoothSerial.read().then((data)=>
+		{
+		this.message=data;
+
+		})
+	}
+
+	read1(){
+		this.ngZone.run(()=>{
+		this.read();
+		})
+	}
+
+	sendData(){
+		BluetoothSerial.write(this.psi + " " + this.servo + " " + this.linear + " ").then((success) => {
+		  console.log("successfully wrote data");
+		  
+		},
+		  (err) => {
+		  	console.log("could not write data");
+		  })
+	}
+
+	readData(){
+		BluetoothSerial.read().then((data) => {
+		  	console.log("DATA: " + data);
+		  	this.feedback = data;
+		});
+	}
 
 }

@@ -5,13 +5,59 @@
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+  <div class="full-width">
+    <ion-label class="center instruction">Ground Ball SS</ion-label>
+  </div>
+  <div class="item fieldpic-border" align="center">
+      <ion-checkbox class="firstSelect" disabled="false"></ion-checkbox>
+      <ion-checkbox class="secondSelect" disabled="false"></ion-checkbox>
+      <ion-checkbox class="ssSelect" disabled="false"></ion-checkbox>
+      <ion-checkbox class="thirdSelect" disabled="false"></ion-checkbox>
+      <ion-checkbox class="pitcherSelect" disabled="false"></ion-checkbox>
+      <ion-checkbox class="catcherSelect" disabled="false"></ion-checkbox>
+      <ion-checkbox class="leftSelect" disabled="false"></ion-checkbox>
+      <ion-checkbox class="centerSelect" disabled="false"></ion-checkbox>
+      <ion-checkbox class="rightSelect" disabled="false"></ion-checkbox>
+
+      <img class="fieldpic padding-bottom" src="../assets/imgs/field.png">
+  </div>
+  <div class="iconWrapper">
+    <ion-icon class="iconStyle" name="play"></ion-icon>
+    <ion-icon class="iconStyle" name="pause"></ion-icon>
+    <ion-icon class="stopIcon"></ion-icon>
+    <ion-icon class="iconStyle" name="skip-backward"></ion-icon>
+  </div>
+
+  <ion-list inset>
+    <ion-item>
+      <ion-label>PSI</ion-label>
+      <ion-input type="text" [(ngModel)]="psi"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>SERVO</ion-label>
+      <ion-input type="text" [(ngModel)]="servo"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>LINEAR</ion-label>
+      <ion-input type="text" [(ngModel)]="linear"></ion-input>
+    </ion-item>
+  </ion-list>
+  <button ion-button color="primary" (click) ="sendData()">Begin</button>
+  <button ion-button color="secondary" (click) ="startScanning()">Connect</button>
+  <button ion-button color="danger" (click) ="disconnect()">Disconnect</button>
+  <button ion-button color="primary" (click) ="readData()">Feedback</button>
+
+  <ion-item>
+    <ion-label>Feedback</ion-label>
+    <ion-input type="text" [(ngModel)]="feedback"></ion-input>
+  </ion-item>
+
+  <ion-list *ngIf="showPairedDevices">
+    <ion-item *ngFor="let device of pairedDevices" (click)='selectDevice(device.id, device.name)'>
+        <button ion-button full>
+            {{device.name}}
+        </button>             
+    </ion-item>
+  </ion-list> 
+
 </ion-content>
