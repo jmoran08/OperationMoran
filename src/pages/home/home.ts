@@ -1,8 +1,9 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { BluetoothSerial } from 'ionic-native';
-import { AlertController, LoadingController } from 'ionic-angular';
+import { AlertController, LoadingController, Platform } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
+import * as $ from "jquery";
 //import { ModalPage } from '../../contact';
 
 @Component({
@@ -29,12 +30,47 @@ export class HomePage {
 	feedback: any;
 	showPairedDevices: any;
 
-	constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone, public modalCtrl: ModalController) {
+	constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone, public modalCtrl: ModalController, private platform: Platform) {
 		//this.getAllBluetoothDevices();
 		//BluetoothSerial.enable();
 		//MOST RECENT ATTEMPT that connects - bluetooth stops blinking
-		this.startScanning();
+		//this.startScanning();
 		//this.presentModal();
+		platform.ready().then(() => {
+			var $src = $('#grid-source');
+		    var $wrap = $('<div id="grid-overlay"></div>');
+		    var $gsize = 20;
+
+		    var $cols = Math.ceil($src.find('img').innerWidth() / $gsize);
+		    var $rows = Math.ceil($src.find('img').innerHeight() / $gsize);
+
+		    // create overlay
+		    var $tbl = $('<table></table>');
+		    for (var y = 1; y <= $rows; y++) {
+		        var $tr = $('<tr></tr>');
+		        for (var x = 1; x <= $cols; x++) {
+		            var $td = $('<td></td>');
+		            $td.css('width', $gsize+'px').css('height', $gsize+'px');
+		            $td.addClass('unselected');
+		            $tr.append($td);
+		        }
+		        $tbl.append($tr);
+		    }
+		    $src.css('width', $cols*$gsize+'px').css('height', $rows*$gsize+'px')
+
+		    // attach overlay
+		    $wrap.append($tbl);
+		    $src.after($wrap);
+
+		    $('#grid-overlay td').click(function() {
+		        $(this).toggleClass('selected').toggleClass('unselected');
+		    });
+		});
+		
+	}
+
+	changeTextColor(){
+	  $('#myButton').text('white');
 	}
 
 	 startScanning() {
