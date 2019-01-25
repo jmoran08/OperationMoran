@@ -7,7 +7,7 @@
 
 <ion-content padding>
   <div class="full-width">
-    <ion-label class="center instruction">Ground Ball SS</ion-label>
+    <ion-input class="center instruction" [(ngModel)]="playType"></ion-input>
   </div>
   <div id="grid-source"><img class="fieldImage" src="../assets/imgs/field.png"></div>
   <!--
@@ -26,7 +26,7 @@
   </div>
   -->
   <div class="iconWrapper">
-    <ion-icon class="iconStyle" name="play"></ion-icon>
+    <ion-icon class="iconStyle" name="play" (click)='playPrebuilt()'></ion-icon>
     <ion-icon class="iconStyle" name="pause"></ion-icon>
     <ion-icon class="stopIcon"></ion-icon>
     <ion-icon class="iconStyle" name="skip-backward"></ion-icon>

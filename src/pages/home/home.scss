@@ -113,5 +113,5 @@
 #grid-overlay { position: relative; }
 
 .fieldImage { display:block !important; width: 100%; height: 100%;}
-.unselected { background-color: rgba(0,0,0,0.5); }
+.unselected { background-color: none; }
 .selected { background-color: red; }
