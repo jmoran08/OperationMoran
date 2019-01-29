@@ -36,6 +36,7 @@ export class HomePage {
 	playType: any;
 	paused: Boolean;
 	stopped: Boolean;
+	previous: Boolean;
 
 	constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone, public modalCtrl: ModalController, private platform: Platform, public prebuilts: Prebuilts, public global: GlobalVars) {
 		//this.getAllBluetoothDevices();
@@ -214,6 +215,11 @@ export class HomePage {
 
 		for(var i=0; i < this.instructions.length; i++){
 			if(this.paused){
+				if(this.stopped){
+					this.stopped = false;
+					this.paused = false;
+					break;
+				}
 				i--;
 				await this.wait();
 			}
@@ -227,8 +233,14 @@ export class HomePage {
 				}
 				//if the coordinates have not been sent, send coordinates
 				else{
+					if(this.previous){
+						coordinatesSent = false;
+						i = i-2;
+						this.previous = false;
+					}
 					if(this.previousPosition){
 						this.previousPosition.css('background-color', 'transparent');
+						this.playType = "";
 					}
 					
 					var table = (<HTMLTableElement>$(".positionTable")[0]);
@@ -259,6 +271,11 @@ export class HomePage {
 				//once coordinates are sent, fire if not paused or stopped
 				//if paused, don't fire and wait
 				if(this.paused){
+					if(this.stopped){
+						this.stopped = false;
+						this.paused = false;
+						break;
+					}
 					coordinatesSent = true;
 				}
 				//if stopped, don't fire and break
@@ -276,6 +293,7 @@ export class HomePage {
 		if(this.previousPosition){
 			this.previousPosition.css('background-color', 'transparent');
 			this.previousPosition = null;
+			this.playType = "";
 		}
 
 	}
@@ -291,6 +309,10 @@ export class HomePage {
 
 	stop(){
 		this.stopped = true;
+	}
+
+	previousInstruction(){
+		this.previous = true;
 	}
 
 }
