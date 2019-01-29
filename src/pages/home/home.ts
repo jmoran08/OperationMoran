@@ -3,6 +3,8 @@ import { NavController } from 'ionic-angular';
 import { BluetoothSerial } from 'ionic-native';
 import { AlertController, LoadingController, Platform } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
+import { Prebuilts } from '../prebuilts';
+import { GlobalVars } from '../global';
 import * as $ from "jquery";
 //import { ModalPage } from '../../contact';
 
@@ -32,15 +34,17 @@ export class HomePage {
 	instructions: any;
 	previousPosition: any;
 	playType: any;
+	paused: Boolean;
+	stopped: Boolean;
 
-	constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone, public modalCtrl: ModalController, private platform: Platform) {
+	constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone, public modalCtrl: ModalController, private platform: Platform, public prebuilts: Prebuilts, public global: GlobalVars) {
 		//this.getAllBluetoothDevices();
 		//BluetoothSerial.enable();
 		//MOST RECENT ATTEMPT that connects - bluetooth stops blinking
 		//this.startScanning();
 		//this.presentModal();
 		platform.ready().then(() => {
-			this.instructions = [{row: 13, col: 11, type: "ground"}, {row: 7, col: 6, type: "fly"}, {row: 6, col: 15, type: "line"}];
+			this.instructions = global.getInstructions();
 			var $src = $('#grid-source');
 		    var $wrap = $('<div id="grid-overlay"></div>');
 		    var $gsize = 20;
@@ -53,12 +57,12 @@ export class HomePage {
 		    $tbl.addClass('positionTable');
 		    for (var y = 1; y <= $rows; y++) {
 		        var $tr = $('<tr></tr>');
-		        $tr.addClass('row' + y);
+		        $tr.addClass('row' + (y-1));
 		        for (var x = 1; x <= $cols; x++) {
 		            var $td = $('<td></td>');
 		            $td.css('width', $gsize+'px').css('height', $gsize+'px');
 		            $td.addClass('unselected');
-		            $td.addClass('col' + x);
+		            $td.addClass('col' + (x-1));
 		            $tr.append($td);
 		        }
 		        $tbl.append($tr);
@@ -204,35 +208,89 @@ export class HomePage {
 	}
 
 	async playPrebuilt() {
+		this.instructions = this.global.getInstructions();
 		var color;
+		var coordinatesSent = false;
+
 		for(var i=0; i < this.instructions.length; i++){
-			if(this.previousPosition){
-				this.previousPosition.css('background-color', 'transparent');
+			if(this.paused){
+				i--;
+				await this.wait();
 			}
-			
-			var table = (<HTMLTableElement>$(".positionTable")[0]);
-		    var cell = table.rows[this.instructions[i].row].cells[this.instructions[i].col]; 
-			var $cell = $(cell);
-			switch(this.instructions[i].type){
-				case "ground":
-					color = "green";
-					this.playType = "Ground Ball";
-					break;
-				case "fly":
-					color = "yellow";
-					this.playType = "Fly Ball";
-					break;
-				case "line":
-					color = "red";
-					this.playType = "Line Drive";
-					break;
-				default:
-					break;
+			else if(this.stopped){
+				this.stopped = false;
+				break;
 			}
-			$cell.css('background-color', color);
-			this.previousPosition = $cell;
-			await this.wait();
+			else{
+				if(coordinatesSent){
+					i--;
+				}
+				//if the coordinates have not been sent, send coordinates
+				else{
+					if(this.previousPosition){
+						this.previousPosition.css('background-color', 'transparent');
+					}
+					
+					var table = (<HTMLTableElement>$(".positionTable")[0]);
+				    var cell = table.rows[this.instructions[i].row].cells[this.instructions[i].col]; 
+					var $cell = $(cell);
+					switch(this.instructions[i].type){
+						case "ground":
+							color = "green";
+							this.playType = "Ground Ball";
+							break;
+						case "fly":
+							color = "yellow";
+							this.playType = "Fly Ball";
+							break;
+						case "line":
+							color = "red";
+							this.playType = "Line Drive";
+							break;
+						default:
+							break;
+					}
+					$cell.css('background-color', color);
+					this.previousPosition = $cell;
+					//send motor coordinates
+					//wait for "done" response from arduino
+					await this.wait();
+				}
+				//once coordinates are sent, fire if not paused or stopped
+				//if paused, don't fire and wait
+				if(this.paused){
+					coordinatesSent = true;
+				}
+				//if stopped, don't fire and break
+				else if(this.stopped){
+					this.stopped = false;
+					break;
+				}
+				else{
+					//fire
+					coordinatesSent = false;
+				}
+				
+			}
 		}
+		if(this.previousPosition){
+			this.previousPosition.css('background-color', 'transparent');
+			this.previousPosition = null;
+		}
+
+	}
+
+	pause(){
+		if(this.paused){
+			this.paused = false;
+		}
+		else{
+			this.paused = true;
+		}
+	}
+
+	stop(){
+		this.stopped = true;
 	}
 
 }
