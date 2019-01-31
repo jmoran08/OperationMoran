@@ -7,6 +7,14 @@
 </ion-header>
 
 <ion-content padding>
-	  <button ion-button color="primary" (click) ="selectPrebuilt('prebuilt1')">Prebuilt1</button>
-	   <button ion-button color="secondary" (click) ="selectPrebuilt('basicFielding')">Basic Fielding</button>
+	   <ion-list>
+		  <ion-item>
+		    <ion-label>Pattern</ion-label>
+		    <ion-select [(ngModel)]="pattern" (ionChange)="patternSelected()" interface="popover" placeholder="Select One">
+		      <ion-option value="random">Random</ion-option>
+		      <ion-option value="prebuilt">Prebuilt</ion-option>
+		      <ion-option value="custom">Custom</ion-option>
+		    </ion-select>
+		  </ion-item>
+		</ion-list>
 </ion-content>

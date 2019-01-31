@@ -1,30 +1,28 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
-import { GlobalVars } from '../global';
-import { Prebuilts } from '../prebuilts';
+import { ModalController } from 'ionic-angular';
 
 @Component({
   selector: 'page-about',
   templateUrl: 'about.html'
 })
 export class AboutPage {
+	pattern: any;
 
-  constructor(public navCtrl: NavController, public prebuilts: Prebuilts, public global: GlobalVars) {
+  constructor(public navCtrl: NavController, public modalCtrl : ModalController) {
   }
 
-  selectPrebuilt(prebuiltName: any){
-  	switch(prebuiltName){
-  		case "prebuilt1":
-  			this.global.setInstructions(this.prebuilts.prebuilt1);
-  			break;
-  		case "basicFielding":
-  			this.global.setInstructions(this.prebuilts.basicFielding);
-  			break;
-  		default:
-  			this.global.setInstructions(this.prebuilts.prebuilt2);
-  			break;
+  patternSelected(){
+  	console.log(this.pattern);
+  	if(this.pattern === "prebuilt"){
+  		this.openModal();
   	}
+  }
+
+  openModal(){
+  	var modalPage = this.modalCtrl.create('PatternSelectModalPage');
+    modalPage.present();
   }
 
 }
