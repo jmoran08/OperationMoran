@@ -18,8 +18,9 @@ import { Prebuilts } from '../prebuilts';
   templateUrl: 'pattern-select-modal.html',
 })
 export class PatternSelectModalPage {
+	chosenPrebuilt: any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public prebuilts: Prebuilts, public global: GlobalVars) {
-
+  	this.chosenPrebuilt = "";
   }
 
   ionViewDidLoad() {
@@ -27,7 +28,16 @@ export class PatternSelectModalPage {
   }
 
   selectPrebuilt(prebuiltName: any){
-  	switch(prebuiltName){
+  this.chosenPrebuilt = prebuiltName;
+  	
+  }
+
+  closeModal(){
+  	this.viewCtrl.dismiss("");
+  }
+
+  confirmChoice(){
+  	switch(this.chosenPrebuilt){
   		case "prebuilt1":
   			this.global.setInstructions(this.prebuilts.prebuilt1);
   			break;
@@ -38,10 +48,8 @@ export class PatternSelectModalPage {
   			this.global.setInstructions(this.prebuilts.prebuilt2);
   			break;
   	}
-  }
+  		this.viewCtrl.dismiss(this.chosenPrebuilt);
 
-  closeModal(){
-  	this.viewCtrl.dismiss("");
   }
 
 }

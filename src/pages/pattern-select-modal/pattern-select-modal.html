@@ -20,4 +20,6 @@
 <ion-content padding>
 	<button ion-button color="primary" (click) ="selectPrebuilt('prebuilt1')">Prebuilt1</button>
    <button ion-button color="secondary" (click) ="selectPrebuilt('basicFielding')">Basic Fielding</button>
+   <ion-label>{{chosenPrebuilt}}</ion-label>
+   <button ion-button (click)="confirmChoice()">Ok</button>
 </ion-content>

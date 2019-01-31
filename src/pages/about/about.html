@@ -17,4 +17,6 @@
 		    </ion-select>
 		  </ion-item>
 		</ion-list>
+		<ion-label>{{prebuiltChosen}}</ion-label>
+		<ion-icon name="close" *ngIf="selectionMade" (click)='removePrebuiltSelection()'></ion-icon>
 </ion-content>
