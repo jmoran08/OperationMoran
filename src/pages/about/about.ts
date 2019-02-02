@@ -9,31 +9,27 @@ import { GlobalVars } from '../global';
   templateUrl: 'about.html'
 })
 export class AboutPage {
-	pattern: any;
 	prebuiltChosen: any;
-	selectionMade: Boolean;
+	prebuiltSelectionMade: Boolean;
 
   constructor(public navCtrl: NavController, public modalCtrl : ModalController, public global: GlobalVars) {
   	this.prebuiltChosen = "";
   	this.selectionMade = false;
   }
 
-  patternSelected(){
-  	console.log(this.pattern);
-  	if(this.pattern === "prebuilt"){
-  		this.openModal();
-  	}
+  random(){
+  	this.prebuiltChosen = "";
+  	this.prebuiltSelectionMade = "";
+  	//will eventually replace this with a random instruction generator call
+  	this.global.setInstructions("");
   }
 
-  openModal(){
+  openPrebuiltModal(){
 	let chooseModal = this.modalCtrl.create('PatternSelectModalPage');
 	  chooseModal.onDidDismiss(data => {
 	  	this.prebuiltChosen = data;
 	     if(data != ""){
-	     	this.selectionMade = true;
-	     }
-	     else{
-	     	this.pattern = "";
+	     	this.prebuiltSelectionMade = true;
 	     }
 		});
 	chooseModal.present();
@@ -41,10 +37,17 @@ export class AboutPage {
     modalPage.present();*/
   }
 
-  removePrebuiltSelection(){
-    this.global.setInstructions({});
+  openCustomModal(){
   	this.prebuiltChosen = "";
-  	this.selectionMade = false;
+  	this.prebuiltSelectionMade = false;
+  	//will eventually replace this with what's returned from modal
+  	this.global.setInstructions("");
+  }
+
+  removePrebuiltSelection(){
+    this.global.setInstructions("");
+  	this.prebuiltChosen = "";
+  	this.prebuiltSelectionMade = false;
   	this.pattern = "";
   }
 

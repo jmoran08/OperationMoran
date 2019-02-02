@@ -5,6 +5,7 @@ import { AlertController, LoadingController, Platform } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 import { Prebuilts } from '../prebuilts';
 import { GlobalVars } from '../global';
+
 import * as $ from "jquery";
 //import { ModalPage } from '../../contact';
 
@@ -37,8 +38,11 @@ export class HomePage {
 	paused: Boolean;
 	stopped: Boolean;
 	previous: Boolean;
+	playing: Boolean;
+	readyToPlay: Boolean;
 
 	constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone, public modalCtrl: ModalController, private platform: Platform, public prebuilts: Prebuilts, public global: GlobalVars) {
+		this.readyToPlay = true;
 		//this.getAllBluetoothDevices();
 		//BluetoothSerial.enable();
 		//MOST RECENT ATTEMPT that connects - bluetooth stops blinking
@@ -209,91 +213,100 @@ export class HomePage {
 	}
 
 	async playPrebuilt() {
-		this.instructions = this.global.getInstructions();
-		var color;
-		var coordinatesSent = false;
+		var globeInstruct = this.global.getInstructions();
+		if(this.global.getInstructions() === ""){
+			this.displayNoInstructionsPopup();
+		}
+		else{
+			this.playing = true;
+			this.readyToPlay = false;
+			this.stopped = false;
+			this.instructions = this.global.getInstructions();
+			var color;
+			var coordinatesSent = false;
 
-		for(var i=0; i < this.instructions.length; i++){
-			if(this.paused){
-				if(this.stopped){
-					this.stopped = false;
-					this.paused = false;
-					break;
-				}
-				i--;
-				await this.wait();
-			}
-			else if(this.stopped){
-				this.stopped = false;
-				break;
-			}
-			else{
-				if(coordinatesSent){
-					i--;
-				}
-				//if the coordinates have not been sent, send coordinates
-				else{
-					if(this.previous){
-						coordinatesSent = false;
-						i = i-2;
-						this.previous = false;
-					}
-					if(this.previousPosition){
-						this.previousPosition.css('background-color', 'transparent');
-						this.playType = "";
-					}
-					
-					var table = (<HTMLTableElement>$(".positionTable")[0]);
-				    var cell = table.rows[this.instructions[i].row].cells[this.instructions[i].col]; 
-					var $cell = $(cell);
-					switch(this.instructions[i].type){
-						case "ground":
-							color = "green";
-							this.playType = "Ground Ball";
-							break;
-						case "fly":
-							color = "yellow";
-							this.playType = "Fly Ball";
-							break;
-						case "line":
-							color = "red";
-							this.playType = "Line Drive";
-							break;
-						default:
-							break;
-					}
-					$cell.css('background-color', color);
-					this.previousPosition = $cell;
-					//send motor coordinates
-					//wait for "done" response from arduino
-					await this.wait();
-				}
-				//once coordinates are sent, fire if not paused or stopped
-				//if paused, don't fire and wait
+			for(var i=0; i < this.instructions.length; i++){
 				if(this.paused){
 					if(this.stopped){
-						this.stopped = false;
-						this.paused = false;
+						//this.stopped = false;
+						//this.paused = false;
 						break;
 					}
-					coordinatesSent = true;
+					i--;
+					await this.wait();
 				}
-				//if stopped, don't fire and break
 				else if(this.stopped){
-					this.stopped = false;
+					//this.stopped = false;
 					break;
 				}
 				else{
-					//fire
-					coordinatesSent = false;
+					if(coordinatesSent){
+						i--;
+					}
+					//if the coordinates have not been sent, send coordinates
+					else{
+						if(this.previous){
+							coordinatesSent = false;
+							i = i-2;
+							this.previous = false;
+						}
+						if(this.previousPosition){
+							this.previousPosition.css('background-color', 'transparent');
+							this.playType = "";
+						}
+						
+						var table = (<HTMLTableElement>$(".positionTable")[0]);
+					    var cell = table.rows[this.instructions[i].row].cells[this.instructions[i].col]; 
+						var $cell = $(cell);
+						switch(this.instructions[i].type){
+							case "ground":
+								color = "green";
+								this.playType = "Ground Ball";
+								break;
+							case "fly":
+								color = "yellow";
+								this.playType = "Fly Ball";
+								break;
+							case "line":
+								color = "red";
+								this.playType = "Line Drive";
+								break;
+							default:
+								break;
+						}
+						$cell.css('background-color', color);
+						this.previousPosition = $cell;
+						//send motor coordinates
+						//wait for "done" response from arduino
+						await this.wait();
+					}
+					//once coordinates are sent, fire if not paused or stopped
+					//if paused, don't fire and wait
+					if(this.paused){
+						if(this.stopped){
+							//this.stopped = false;
+							//this.paused = false;
+							break;
+						}
+						coordinatesSent = true;
+					}
+					//if stopped, don't fire and break
+					else if(this.stopped){
+						//this.stopped = false;
+						break;
+					}
+					else{
+						//fire
+						coordinatesSent = false;
+					}
+					
 				}
-				
 			}
-		}
-		if(this.previousPosition){
-			this.previousPosition.css('background-color', 'transparent');
-			this.previousPosition = null;
-			this.playType = "";
+			if(this.previousPosition){
+				this.previousPosition.css('background-color', 'transparent');
+				this.previousPosition = null;
+				this.playType = "";
+			}
 		}
 
 	}
@@ -301,18 +314,34 @@ export class HomePage {
 	pause(){
 		if(this.paused){
 			this.paused = false;
+			this.playing = true;
 		}
 		else{
 			this.paused = true;
+			this.playing = false;
 		}
 	}
 
 	stop(){
 		this.stopped = true;
+		this.playing = false;
+		this.paused = false;
+		this.readyToPlay = true;
 	}
 
 	previousInstruction(){
 		this.previous = true;
+		this.paused = false;
+		this.playing = true;
+	}
+
+	displayNoInstructionsPopup() {
+	    const alert = this.alertCtrl.create({
+	      title: 'No Instructions',
+	      subTitle: 'You have not selected a pattern.',
+	      buttons: ['OK']
+	    });
+	    alert.present();
 	}
 
 }

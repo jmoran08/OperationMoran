@@ -7,16 +7,12 @@
 </ion-header>
 
 <ion-content padding>
-	   <ion-list>
-		  <ion-item>
-		    <ion-label>Pattern</ion-label>
-		    <ion-select [(ngModel)]="pattern" (ionChange)="patternSelected()" interface="popover" placeholder="Select One">
-		      <ion-option value="random">Random</ion-option>
-		      <ion-option value="prebuilt">Prebuilt</ion-option>
-		      <ion-option value="custom">Custom</ion-option>
-		    </ion-select>
-		  </ion-item>
-		</ion-list>
+		<button ion-button class="fullWidthButton" color="primary" (click) ="random()">Random</button>
+		<button ion-button class="fullWidthButton" color="secondary" (click) ="openPrebuiltModal()">Prebuilt</button>
+		<div *ngIf="prebuiltSelectionMade">
+		<ion-icon name="close" (click)='removePrebuiltSelection()'></ion-icon>
 		<ion-label>{{prebuiltChosen}}</ion-label>
-		<ion-icon name="close" *ngIf="selectionMade" (click)='removePrebuiltSelection()'></ion-icon>
+		</div>
+		<button ion-button class="fullWidthButton" color="danger" (click) ="openCustomModal()">Custom</button>
+		
 </ion-content>

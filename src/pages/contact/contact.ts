@@ -7,8 +7,19 @@ import { NavController } from 'ionic-angular';
 })
 export class ContactPage {
 
+	fieldType: any;
+	skillLevel: any;
   constructor(public navCtrl: NavController) {
+  	this.fieldType = "";
+  	this.skillLevel = "";
+  }
 
+  fieldTypeSelected(fieldChosen){
+  	this.fieldType = fieldChosen;
+  }
+
+  skillLevelSelected(skillLevelSelected){
+  	this.skillLevel = skillLevelSelected;
   }
 
 }

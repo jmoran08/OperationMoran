@@ -8,10 +8,25 @@
 
 <ion-content>
   <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
-    <ion-item>
-      <ion-icon name="ionic" item-start></ion-icon>
-      @ionicframework
-    </ion-item>
-  </ion-list>
+      <ion-item>
+        <ion-label>Field Type</ion-label>
+        <ion-select [(ngModel)]="fieldType" (ionChange)="fieldTypeSelected()" interface="popover" placeholder="Select One">
+          <ion-option value="baseball">Baseball</ion-option>
+          <ion-option value="softball">Softball</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Skill Level</ion-label>
+        <ion-select [(ngModel)]="skillLevel" (ionChange)="skillLevelSelected()" interface="popover" placeholder="Select One">
+          <ion-option value="8Under">8u and under</ion-option>
+          <ion-option value="10">10u</ion-option>
+          <ion-option value="12">12u</ion-option>
+          <ion-option value="14">14u</ion-option>
+          <ion-option value="16">16u</ion-option>
+          <ion-option value="18">18u</ion-option>
+          <ion-option value="college">Collegiate</ion-option>
+          <ion-option value="pro">Pro</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
 </ion-content>
