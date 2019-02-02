@@ -11,15 +11,16 @@ import { GlobalVars } from '../global';
 export class AboutPage {
 	prebuiltChosen: any;
 	prebuiltSelectionMade: Boolean;
-
+	customPattern: any;
   constructor(public navCtrl: NavController, public modalCtrl : ModalController, public global: GlobalVars) {
   	this.prebuiltChosen = "";
-  	this.selectionMade = false;
+  	this.customPattern = "";
+  	this.prebuiltSelectionMade = false;
   }
 
   random(){
   	this.prebuiltChosen = "";
-  	this.prebuiltSelectionMade = "";
+  	this.prebuiltSelectionMade = false;
   	//will eventually replace this with a random instruction generator call
   	this.global.setInstructions("");
   }
@@ -38,17 +39,22 @@ export class AboutPage {
   }
 
   openCustomModal(){
-  	this.prebuiltChosen = "";
-  	this.prebuiltSelectionMade = false;
-  	//will eventually replace this with what's returned from modal
-  	this.global.setInstructions("");
+  	let chooseModal = this.modalCtrl.create('CustomPatternModalPage');
+	  chooseModal.onDidDismiss(data => {
+	  	this.customPattern = data;
+	     if(data != ""){
+	     	this.prebuiltSelectionMade = true;
+	     	this.prebuiltChosen = "";
+		  	this.prebuiltSelectionMade = false;
+	     }
+		});
+	chooseModal.present();
   }
 
   removePrebuiltSelection(){
     this.global.setInstructions("");
   	this.prebuiltChosen = "";
   	this.prebuiltSelectionMade = false;
-  	this.pattern = "";
   }
 
 }

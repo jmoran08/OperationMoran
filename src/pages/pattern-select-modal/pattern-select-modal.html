@@ -19,7 +19,9 @@
 
 <ion-content padding>
 	<button ion-button color="primary" (click) ="selectPrebuilt('prebuilt1')">Prebuilt1</button>
+	<ion-icon name="information-circle" (click)="displayDetails('prebuilt1', $event)"></ion-icon>
    <button ion-button color="secondary" (click) ="selectPrebuilt('basicFielding')">Basic Fielding</button>
+   <ion-icon name="information-circle" (click)="displayDetails('basic', $event)"></ion-icon>
    <ion-label>{{chosenPrebuilt}}</ion-label>
    <button ion-button (click)="confirmChoice()">Ok</button>
 </ion-content>

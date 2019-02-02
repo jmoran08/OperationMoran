@@ -337,8 +337,8 @@ export class HomePage {
 
 	displayNoInstructionsPopup() {
 	    const alert = this.alertCtrl.create({
-	      title: 'No Instructions',
-	      subTitle: 'You have not selected a pattern.',
+	      title: 'Select Play Type',
+	      subTitle: 'Please select a play type',
 	      buttons: ['OK']
 	    });
 	    alert.present();

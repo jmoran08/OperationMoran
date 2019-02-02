@@ -28,7 +28,7 @@
   <div class="iconWrapper">
     <ion-icon class="iconStyle" *ngIf="readyToPlay" name="play" (click)='playPrebuilt()'></ion-icon>
     <ion-icon class="iconStyle" *ngIf="playing" name="pause" (click)='pause()'></ion-icon>
-    <ion-icon class="iconStyle" *ngIf="paused" name="unpause" (click)='pause()'></ion-icon>
+    <ion-icon class="iconStyle" *ngIf="paused" name="play" (click)='pause()'></ion-icon>
     <ion-icon class="stopIcon" *ngIf="playing || paused" (click)='stop()'></ion-icon>
     <ion-icon class="iconStyle" name="skip-backward" *ngIf="paused" (click)='previousInstruction()'></ion-icon>
   </div>

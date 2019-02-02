@@ -4,6 +4,8 @@ import { ViewController } from 'ionic-angular';
 
 import { GlobalVars } from '../global';
 import { Prebuilts } from '../prebuilts';
+import { PopoverController } from 'ionic-angular';
+
 
 /**
  * Generated class for the PatternSelectModalPage page.
@@ -19,7 +21,7 @@ import { Prebuilts } from '../prebuilts';
 })
 export class PatternSelectModalPage {
 	chosenPrebuilt: any;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public prebuilts: Prebuilts, public global: GlobalVars) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public prebuilts: Prebuilts, public global: GlobalVars, public popoverCtrl: PopoverController) {
   	this.chosenPrebuilt = "";
   }
 
@@ -50,6 +52,13 @@ export class PatternSelectModalPage {
   	}
   		this.viewCtrl.dismiss(this.chosenPrebuilt);
 
+  }
+
+  displayDetails(pattern: any, myEvent: any) {
+    const popover = this.popoverCtrl.create('PrebuiltPatternDetailsPage', {detailsOf:pattern});
+    popover.present({
+    	ev: myEvent
+    });
   }
 
 }
