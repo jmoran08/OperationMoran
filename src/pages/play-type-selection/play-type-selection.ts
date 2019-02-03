@@ -29,4 +29,8 @@ export class PlayTypeSelectionPage {
 
   }
 
+  cancel(){
+  	this.viewCtrl.dismiss("");
+  }
+
 }

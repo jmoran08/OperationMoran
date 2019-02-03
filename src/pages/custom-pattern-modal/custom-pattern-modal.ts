@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams} from 'ionic-angular';
 import { ViewController, PopoverController } from 'ionic-angular';
+import { GlobalVars } from '../global';
 import * as $ from "jquery";
 
 /**
@@ -20,8 +21,9 @@ export class CustomPatternModalPage {
 	previousPosition: any;
 	previousRow: any;
 	play: any;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public popoverCtrl: PopoverController) {
-
+	instructions: any;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public popoverCtrl: PopoverController, public global: GlobalVars) {
+  	this.instructions = [];
   }
 
   ionViewDidLoad() {
@@ -69,19 +71,32 @@ export class CustomPatternModalPage {
   	this.viewCtrl.dismiss("");
   }
 
+  setInstructionsAndClose(){
+  	this.global.setInstructions(this.instructions);
+  	this.viewCtrl.dismiss("");
+  }
+
   positionSelected(){
   	const popover = this.popoverCtrl.create('PlayTypeSelectionPage');
     popover.present();
     popover.onDidDismiss(data => {
-    	this.play = data;
-    	console.log("custom play type: " + data);
+    	if(data != ""){
+			this.play = data;
+			this.addInstruction();
+    	}
 	});
   }
 
-  setInstructions(){
-  	console.log(this.previousPosition);
-  	console.log(this.previousRow);
-  	console.log(this.play);
+  addInstruction(){
+  	this.instructions.push(
+		{
+			row: this.previousRow.index(), 
+			col: this.previousPosition.index(), 
+			type: this.play
+		});
+  	this.previousPosition.removeClass('selected');
+  	this.previousPosition.addClass('unselected');
+
   }
 
 }

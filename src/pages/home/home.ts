@@ -307,6 +307,10 @@ export class HomePage {
 				this.previousPosition = null;
 				this.playType = "";
 			}
+			this.playing = false;
+			this.paused = false;
+			this.stopped = false;
+			this.readyToPlay = true;
 		}
 
 	}
