@@ -9,10 +9,10 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { GlobalVars } from '../pages/global'
 import { Prebuilts } from '../pages/prebuilts';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
-
-import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
+import { SQLite } from '@ionic-native/sqlite/ngx';
 
 @NgModule({
   declarations: [
@@ -40,6 +40,7 @@ import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
     BluetoothSerial,
     Prebuilts,
     GlobalVars,
+    SQLite, 
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

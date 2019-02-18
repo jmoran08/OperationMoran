@@ -51,6 +51,19 @@ export class AboutPage {
 	chooseModal.present();
   }
 
+  openCustomSelectModal(){
+  	let chooseModal = this.modalCtrl.create('CustomPatternSelectModalPage');
+	  chooseModal.onDidDismiss(data => {
+	  	this.customPattern = data;
+	     if(data != ""){
+	     	this.prebuiltSelectionMade = true;
+	     	this.prebuiltChosen = "";
+		  	this.prebuiltSelectionMade = false;
+	     }
+		});
+	chooseModal.present();
+  }
+
   removePrebuiltSelection(){
     this.global.setInstructions("");
   	this.prebuiltChosen = "";

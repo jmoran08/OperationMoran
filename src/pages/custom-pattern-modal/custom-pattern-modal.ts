@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams} from 'ionic-angular';
 import { ViewController, PopoverController } from 'ionic-angular';
-import { GlobalVars } from '../global';
+import { GlobalVars } from '../global'
+
 import * as $ from "jquery";
 
 /**
