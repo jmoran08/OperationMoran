@@ -6,15 +6,23 @@
 -->
 <ion-header>
   <ion-navbar>
+  <ion-buttons start>
+  	<button ion-button icon-only (click)="closeChooseCustomPatternModal()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+  </ion-buttons>
     <ion-title>
       My Patterns
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="addData()">
+      <button ion-button icon-only (click)="openCustomPatternModal()">
         <ion-icon name="add-circle"></ion-icon>
       </button>
-      <button ion-button icon-only (click)="deleteData()">
+      <button ion-button icon-only (click)="deleteAllData()">
         <ion-icon name="trash"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="dropTables()">
+        <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -26,12 +34,15 @@
     <ion-item-sliding *ngFor="let pattern of patterns; let i=index">
       <ion-item nopadding>
         <p>
-          Id: {{pattern.rowid}}<br>
+          Id: {{pattern.instructionId}}<br>
           Name: {{pattern.patternName}}<br>
           Type: {{pattern.patternType}}<br>
           Row: {{pattern.patternRow}}<br>
           Col: {{pattern.patternCol}}
         </p>
+        <button ion-button icon-only (click)="deleteOneItem(pattern.rowid)">
+        <ion-icon name="remove-circle"></ion-icon>
+      </button>
       </ion-item>
       
     </ion-item-sliding>

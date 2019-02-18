@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Platform } from 'ionic-angular';
+import { ViewController, ModalController } from 'ionic-angular';
+
 
 /**
  * Generated class for the CustomPatternSelectModalPage page.
@@ -25,7 +27,7 @@ export class CustomPatternSelectModalPage {
 	patternData = { patternName: "Test Pattern", patternRow: 7, patternCol: 6, patternType: "ground"};
 	data = { date:"testDate", type:"testType", description:"testDesc", amount:10 };
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private sqlite: SQLite, private platform: Platform) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private sqlite: SQLite, private platform: Platform, public modalCtrl : ModalController, public viewCtrl: ViewController) {
   	
   }
 
@@ -40,46 +42,51 @@ export class CustomPatternSelectModalPage {
 	    name: 'ionicdb.db',
 	    location: 'default'
 	  }).then((db: SQLiteObject) => {
-	  	console.log("before create");
-	    db.executeSql('CREATE TABLE IF NOT EXISTS pattern(rowid INTEGER PRIMARY KEY, patternName TEXT, patternType TEXT, patternRow INT, patternCol INT)', [])
+	  	db.executeSql('CREATE TABLE IF NOT EXISTS pattern(patternId INTEGER PRIMARY KEY, patternName TEXT)', []).then((resPattern) => {
+	  		db.executeSql('CREATE TABLE IF NOT EXISTS instruction(instructionId INTEGER PRIMARY KEY, pattern_id INTEGER, patternType TEXT, patternRow INT, patternCol INT, FOREIGN KEY(pattern_id) REFERENCES pattern (patternId))', [])
 	    .then((res) => {
 	    	console.log('Executed SQL create');
-		    db.executeSql('SELECT * FROM pattern ORDER BY rowid', [])
+		    db.executeSql('SELECT * FROM instruction ORDER BY instructionId', [])
 		    .then((res) => {
 		    	console.log("in select");
+		    	console.log("created pattern name: " + resPattern.patternName);
 		      this.patterns = [];
 		      for(var i=0; i<res.rows.length; i++) {
-		        this.patterns.push({rowid:res.rows.item(i).rowid,patternName:res.rows.item(i).patternName,patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol})
+		        this.patterns.push({instructionId:res.rows.item(i).instructionId,patternName: res.rows.item(i).pattern_id, patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol})
 		      }
-		      for(var k=0; k<this.patterns.length; k++){
-		      	console.log("Pattern " + k + "id: " + this.patterns[k].rowid);
-		      	console.log("Pattern " + k + " name: " + this.patterns[k].patternName);
-		      	console.log("Pattern " + k + " type: " + this.patterns[k].patternType);
-		      	console.log("Pattern " + k + " row: " + this.patterns[k].patternRow);
-		      	console.log("Pattern " + k + " col: " + this.patterns[k].patternCol);
-		      }
-		    }, (error) => { console.log("error selecting")});
-	    }, (error) => { console.log("error creating table")});
+		    }, (error) => { console.log("error selecting"); });
+	    }, (error) => { console.log("error creating instruction table"); console.log(error.message);});
+	  	}, (error) => {console.log("error creating pattern table")});
+	    
 	  }, (error) => { console.log("error sql create")});
 	}
 
-	addData() {
-	  this.sqlite.create({
+	saveCustomPattern(pattern){
+		this.sqlite.create({
 	      name: 'ionicdb.db',
 	      location: 'default'
 	    }).then((db: SQLiteObject) => {
-	      let q = "INSERT INTO pattern VALUES (?, ?, ?, ?, ?)";
-	      db.executeSql(q, [null, "testname","testtype",7,6])
+	      let p = "INSERT INTO pattern VALUES (?, ?)";
+	      db.executeSql(p, [null, "Custom Pattern"])
 	        .then((res) => {
-	        	console.log("inserting");
-	          console.log(res);
-	          this.getData();
+	          let q = "INSERT INTO instruction VALUES (?, ?, ?, ?, ?)";
+		      for(var i = 0; i < pattern.length; i++){
+			      db.executeSql(q, [null, res.insertId,pattern[i].type,pattern[i].row,pattern[i].col])
+			        .then((res) => {
+			          
+			        }, (error) =>  {
+			          console.log("error inserting to instructions");
+			        });
+		        }
 	        }, (error) =>  {
-	          console.log("error inserting");
+	          console.log("error inserting to pattern");
+	          console.log(error.message);
 	        });
+	      
 	    }, (error) => {
 	      console.log("error creating/opening add");
 	    });
+	    this.getData();
 	}
 
 	/*editData(rowid) {
@@ -88,17 +95,72 @@ export class CustomPatternSelectModalPage {
 	  });
 	}*/
 
-	deleteData() {
+	deleteAllData() {
 	  this.sqlite.create({
 	    name: 'ionicdb.db',
 	    location: 'default'
 	  }).then((db: SQLiteObject) => {
-	    db.executeSql('DELETE FROM pattern', [])
+	    db.executeSql('DELETE FROM instruction', [])
 	    .then(res => {
 	      console.log(res);
 	      this.getData();
 	    }, (error) => { console.log("error deleting")});
 	  }, (error) => {console.log("error creating/opening db")});
 	}
+
+	deleteOneItem(id) {
+	  this.sqlite.create({
+	    name: 'ionicdb.db',
+	    location: 'default'
+	  }).then((db: SQLiteObject) => {
+	  	console.log("id to delete: " + id);
+	    db.executeSql('DELETE FROM instruction WHERE instructionId = ' + id, [])
+	    .then(res => {
+	      console.log(res);
+	      this.getData();
+	    }, (error) => { console.log("error deleting")});
+	  }, (error) => {console.log("error creating/opening db")});
+	}
+
+	openCustomPatternModal(){
+  	let chooseModal = this.modalCtrl.create('CustomPatternModalPage');
+	  chooseModal.onDidDismiss(data => {
+	  	//this.customPattern = data;
+	     if(data != ""){
+	     	/*this.prebuiltSelectionMade = true;
+	     	this.prebuiltChosen = "";
+		  	this.prebuiltSelectionMade = false;*/
+		  	this.saveCustomPattern(data);
+	     }
+		});
+	chooseModal.present();
+  }
+
+  closeChooseCustomPatternModal(){
+  	this.viewCtrl.dismiss("");
+  }
+
+  /*dropTables(){
+  	this.sqlite.create({
+	    name: 'ionicdb.db',
+	    location: 'default'
+	  }).then((db: SQLiteObject) => {
+	  	db.executeSql('DROP TABLE pattern').then((res) => {
+
+	  	}, (error) => {
+	  		console.log("error dropping pattern");
+	  		console.log(error.message);
+	  	});
+	  	db.executeSql('DROP TABLE instruction').then((res) => {
+
+	  	}, (error) => {
+	  		console.log("error dropping instruction");
+	  		console.log(error.message);
+	  	});
+  	}, (error) => {
+
+  	});
+
+  }*/
 
 }
