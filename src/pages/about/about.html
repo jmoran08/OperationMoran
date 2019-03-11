@@ -3,6 +3,14 @@
     <ion-title>
       About
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="setPrebuiltPatterns()">
+        <ion-icon name="add-circle"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="deleteAllCustomData()">
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -15,5 +23,11 @@
 		</div>
 		<button ion-button class="fullWidthButton" color="danger" (click) ="openCustomModal()">Custom</button>
 		<button ion-button class="fullWidthButton" color="danger" (click) ="openCustomSelectModal()">Custom Select</button>
+
+		<div class="square-container" *ngFor="let pattern of patterns; let i=index">
+		  <div class="square">
+		    <div class="content">{{pattern.patternName}}</div>
+		  </div>
+		</div>
 		
 </ion-content>

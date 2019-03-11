@@ -42,7 +42,7 @@ export class CustomPatternSelectModalPage {
 	    name: 'ionicdb.db',
 	    location: 'default'
 	  }).then((db: SQLiteObject) => {
-	  	db.executeSql('CREATE TABLE IF NOT EXISTS pattern(patternId INTEGER PRIMARY KEY, patternName TEXT)', []).then((resPattern) => {
+	  	db.executeSql('CREATE TABLE IF NOT EXISTS pattern(patternId INTEGER PRIMARY KEY, patternName TEXT, custom INTEGER)', []).then((resPattern) => {
 	  		db.executeSql('CREATE TABLE IF NOT EXISTS instruction(instructionId INTEGER PRIMARY KEY, pattern_id INTEGER, patternType TEXT, patternRow INT, patternCol INT, FOREIGN KEY(pattern_id) REFERENCES pattern (patternId))', [])
 	    .then((res) => {
 	    	console.log('Executed SQL create');
@@ -66,8 +66,8 @@ export class CustomPatternSelectModalPage {
 	      name: 'ionicdb.db',
 	      location: 'default'
 	    }).then((db: SQLiteObject) => {
-	      let p = "INSERT INTO pattern VALUES (?, ?)";
-	      db.executeSql(p, [null, "Custom Pattern"])
+	      let p = "INSERT INTO pattern VALUES (?, ?, ?)";
+	      db.executeSql(p, [null, "Custom Pattern", 1])
 	        .then((res) => {
 	          let q = "INSERT INTO instruction VALUES (?, ?, ?, ?, ?)";
 		      for(var i = 0; i < pattern.length; i++){
@@ -140,7 +140,8 @@ export class CustomPatternSelectModalPage {
   	this.viewCtrl.dismiss("");
   }
 
-  /*dropTables(){
+  //REMOVE WHEN YOU DON'T NEED ANYMORE
+  dropTables(){
   	this.sqlite.create({
 	    name: 'ionicdb.db',
 	    location: 'default'
@@ -161,6 +162,6 @@ export class CustomPatternSelectModalPage {
 
   	});
 
-  }*/
+  }
 
 }
