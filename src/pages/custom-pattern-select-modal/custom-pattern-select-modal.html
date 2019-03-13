@@ -31,14 +31,13 @@
 <ion-content padding>
   <h2>Pattern List</h2>
   <ion-list>
-    <ion-item-sliding *ngFor="let pattern of patterns; let i=index">
+    <ion-item-sliding *ngFor="let instruction of instructions; let i=index">
       <ion-item nopadding>
         <p>
-          Id: {{pattern.instructionId}}<br>
-          Name: {{pattern.patternName}}<br>
-          Type: {{pattern.patternType}}<br>
-          Row: {{pattern.patternRow}}<br>
-          Col: {{pattern.patternCol}}
+          Id: {{instruction.instructionId}}<br>
+          Type: {{instruction.patternType}}<br>
+          Row: {{instruction.patternRow}}<br>
+          Col: {{instruction.patternCol}}
         </p>
         <button ion-button icon-only (click)="deleteOneItem(pattern.instructionId)">
         <ion-icon name="remove-circle"></ion-icon>

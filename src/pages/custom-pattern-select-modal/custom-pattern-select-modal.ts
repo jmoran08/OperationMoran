@@ -24,6 +24,8 @@ export class CustomPatternSelectModalPage {
 	totalExpense = 0;
 	balance = 0;
 	patterns: any = [];
+	pattern: any = [];
+	instructions: any = [];
 	patternData = { patternName: "Test Pattern", patternRow: 7, patternCol: 6, patternType: "ground"};
 	data = { date:"testDate", type:"testType", description:"testDesc", amount:10 };
 
@@ -33,7 +35,10 @@ export class CustomPatternSelectModalPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CustomPatternSelectModalPage');
-    this.getData();
+    console.log("patterns: " + this.navParams.get('pattern').length);
+    this.patterns = this.navParams.get('pattern');
+    this.instructions = this.patterns.instructions;
+    console.log("instructions: " + this.instructions.length);
   }
 
   getData() {

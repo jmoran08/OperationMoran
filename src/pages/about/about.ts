@@ -59,8 +59,8 @@ export class AboutPage {
 	chooseModal.present();
   }
 
-  openCustomSelectModal(){
-  	let chooseModal = this.modalCtrl.create('CustomPatternSelectModalPage');
+  openCustomSelectModal(patternSent: any = []){
+  	let chooseModal = this.modalCtrl.create('CustomPatternSelectModalPage', {pattern: patternSent});
 	  chooseModal.onDidDismiss(data => {
 	  	this.customPattern = data;
 	     if(data != ""){
@@ -92,7 +92,7 @@ export class AboutPage {
 	    .then((res) => {
 	    	console.log('Executed SQL create');
 	    	this.patternObject = [];
-		    db.executeSql('SELECT * FROM pattern', [])
+		    db.executeSql('SELECT * FROM pattern ORDER BY patternId DESC', [])
 		    .then((resPatterns) => {
 		    	console.log("in select");
 		    	console.log("patterns: " + resPatterns.rows.length);

@@ -25,8 +25,9 @@
 		<button ion-button class="fullWidthButton" color="danger" (click) ="openCustomSelectModal()">Custom Select</button>
 
 		<div class="square-container" *ngFor="let pattern of patternObject; let i=index">
-		  <div class="square">
+		  <div class="square" (click) ="openCustomSelectModal(pattern)">
 		    <div class="content">{{pattern.patternName}}</div>
+		    <div [hidden]="true">{{pattern}}</div>
 		  </div>
 		</div>
 		
