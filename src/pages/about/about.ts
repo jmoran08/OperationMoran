@@ -16,6 +16,8 @@ export class AboutPage {
 	prebuiltSelectionMade: Boolean;
 	customPattern: any;
 	patterns: any = [];
+	instructions: any = [];
+	patternObject: any = [];
 
   constructor(public navCtrl: NavController, public modalCtrl : ModalController, public global: GlobalVars, private sqlite: SQLite, public prebuilts: Prebuilts) {
   	this.prebuiltChosen = "";
@@ -78,22 +80,49 @@ export class AboutPage {
   }
 
   //BEGINNING OF SQLITE
-  getPatterns() {
-  		console.log("in get patterns");
+
+	getPatterns() {
+  		console.log("in get data");
 	  this.sqlite.create({
 	    name: 'ionicdb.db',
 	    location: 'default'
 	  }).then((db: SQLiteObject) => {
-	  	db.executeSql('CREATE TABLE IF NOT EXISTS pattern(patternId INTEGER PRIMARY KEY, patternName TEXT, custom INTEGER)', []).then((res) => {
+	  	db.executeSql('CREATE TABLE IF NOT EXISTS pattern(patternId INTEGER PRIMARY KEY, patternName TEXT, custom INTEGER)', []).then((resPattern) => {
+	  		db.executeSql('CREATE TABLE IF NOT EXISTS instruction(instructionId INTEGER PRIMARY KEY, pattern_id INTEGER, patternType TEXT, patternRow INT, patternCol INT, FOREIGN KEY(pattern_id) REFERENCES pattern (patternId))', [])
+	    .then((res) => {
 	    	console.log('Executed SQL create');
-		    db.executeSql('SELECT * FROM pattern ORDER BY patternId DESC', [])
-		    .then((res) => {
-		      this.patterns = [];
-		      for(var i=0; i<res.rows.length; i++) {
-		        this.patterns.push({patternId:res.rows.item(i).patternId,patternName: res.rows.item(i).patternName, custom: res.rows.item(i).custom});
-		      }
-		    }, (error) => { console.log("error selecting"); });
-	    }, (error) => { console.log("error creating pattern table"); console.log(error.message);});
+	    	this.patternObject = [];
+		    db.executeSql('SELECT * FROM pattern', [])
+		    .then((resPatterns) => {
+		    	console.log("in select");
+		    	console.log("patterns: " + resPatterns.rows.length);
+		      
+		      db.executeSql('SELECT * FROM instruction', [])
+			    .then((resInstructions) => {
+			    	console.log("in select");
+			    	console.log("instructions: " + resInstructions.rows.length);
+			      
+			      for(var k=0; k < resPatterns.rows.length; k++){
+			      	var pattern = [];
+			      	var instructions = [];
+
+			      	pattern.push({patternId: resPatterns.rows.item(k).patternId, patternName: resPatterns.rows.item(k).patternName, custom: resPatterns.rows.item(k).custom});
+				      for(var j=0; j<resInstructions.rows.length; j++) {
+
+				      	if(resInstructions.rows.item(j).pattern_id === resPatterns.rows.item(k).patternId){
+				      		instructions.push({instructionId:resInstructions.rows.item(j).instructionId, patternType:resInstructions.rows.item(j).patternType,patternRow:resInstructions.rows.item(j).patternRow,patternCol:resInstructions.rows.item(j).patternCol});
+				      	}
+				      }
+				      this.patternObject.push({patternId: pattern[0].patternId, patternName: pattern[0].patternName, custom: pattern[0].custom, instructions: instructions});
+			      }
+
+			      console.log("Number of objects: " + this.patternObject.length);
+
+			    }, (error) => { console.log("error selecting instructions"); });
+		    }, (error) => { console.log("error selecting patterns"); });
+		    
+	    }, (error) => { console.log("error creating instruction table"); console.log(error.message);});
+	  	}, (error) => {console.log("error creating pattern table")});
 	    
 	  }, (error) => { console.log("error sql create")});
 	}

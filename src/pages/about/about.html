@@ -24,7 +24,7 @@
 		<button ion-button class="fullWidthButton" color="danger" (click) ="openCustomModal()">Custom</button>
 		<button ion-button class="fullWidthButton" color="danger" (click) ="openCustomSelectModal()">Custom Select</button>
 
-		<div class="square-container" *ngFor="let pattern of patterns; let i=index">
+		<div class="square-container" *ngFor="let pattern of patternObject; let i=index">
 		  <div class="square">
 		    <div class="content">{{pattern.patternName}}</div>
 		  </div>
