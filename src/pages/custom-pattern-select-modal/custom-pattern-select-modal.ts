@@ -19,7 +19,7 @@ import { ViewController, ModalController } from 'ionic-angular';
 })
 export class CustomPatternSelectModalPage {
 
-	patterns: any = [];
+	pattern: any = [];
 	instructions: any = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sqlite: SQLite, private platform: Platform, public modalCtrl : ModalController, public viewCtrl: ViewController) {
@@ -27,11 +27,12 @@ export class CustomPatternSelectModalPage {
   }
 
   ionViewDidLoad() {
-    this.pattern = this.navParams.get('pattern');
-    this.getInstructions(this.pattern.patternId);
+  	this.pattern = [];
+  	this.pattern = this.navParams.get('pattern');
+    this.getInstructions();
   }
 
-  getInstructions(patternId) {
+  getInstructions() {
   		console.log("in get data");
 	  this.sqlite.create({
 	    name: 'ionicdb.db',
@@ -40,16 +41,16 @@ export class CustomPatternSelectModalPage {
 	  	db.executeSql('CREATE TABLE IF NOT EXISTS pattern(patternId INTEGER PRIMARY KEY, patternName TEXT, custom INTEGER)', []).then((resPattern) => {
 	  		db.executeSql('CREATE TABLE IF NOT EXISTS instruction(instructionId INTEGER PRIMARY KEY, pattern_id INTEGER, patternType TEXT, patternRow INT, patternCol INT, FOREIGN KEY(pattern_id) REFERENCES pattern (patternId))', [])
 	    .then((res) => {
-		    db.executeSql('SELECT * FROM instruction WHERE pattern_id = ' + patternId + ' ORDER BY instructionId', [])
+		    db.executeSql('SELECT * FROM instruction WHERE pattern_id = ' + this.pattern.patternId + ' ORDER BY instructionId', [])
 		    .then((res) => {
-		      this.patterns = [];
+		      
 		      this.instructions = [];
 		      for(var i=0; i<res.rows.length; i++) {
 		        this.instructions.push({instructionId:res.rows.item(i).instructionId,patternName: res.rows.item(i).pattern_id, patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol})
 		      }
 		    }, (error) => { console.log("error selecting"); console.log(error.message) });
 	    }, (error) => { console.log("error creating instruction table"); console.log(error.message);});
-	  	}, (error) => {console.log("error creating pattern table")});
+	  	}, (error) => {console.log("error creating pattern table"); console.log(error.message);});
 	    
 	  }, (error) => { console.log("error sql create")});
 	}
@@ -79,7 +80,7 @@ export class CustomPatternSelectModalPage {
 	    }, (error) => {
 	      console.log("error creating/opening add");
 	    });
-	    this.getInstructions(pattern.patternId);
+	    this.getInstructions();
 	}
 
 	/*editPattern(patternId) {
@@ -110,29 +111,28 @@ export class CustomPatternSelectModalPage {
 	    this.getInstructions();
 	}*/
 
-	deleteAllInstructionsForPattern(patternId: any) {
+	deleteAllInstructionsForPattern() {
 	  this.sqlite.create({
 	    name: 'ionicdb.db',
 	    location: 'default'
 	  }).then((db: SQLiteObject) => {
-	    db.executeSql('DELETE FROM instruction WHERE pattern_id = ' + patternId, [])
+	    db.executeSql('DELETE FROM instruction WHERE pattern_id = ' + this.pattern.patternId, [])
 	    .then(res => {
 	      console.log(res);
-	      this.getInstructions(patternId);
+	      this.getInstructions();
 	    }, (error) => { console.log("error deleting"); console.log(error.message)});
 	  }, (error) => {console.log("error creating/opening db")});
 	}
 
-	deleteOneItem(instructionIdSent, patternId) {
+	deleteOneItem(instruction) {
 	  this.sqlite.create({
 	    name: 'ionicdb.db',
 	    location: 'default'
 	  }).then((db: SQLiteObject) => {
-	  	console.log("id to delete: " + instructionIdSent);
-	    db.executeSql('DELETE FROM instruction WHERE instructionId = ' + instructionIdSent, [])
+	    db.executeSql('DELETE FROM instruction WHERE instructionId = ' + instruction, [])
 	    .then(res => {
 	      console.log(res);
-	      this.getInstructions(patternId);
+	      this.getInstructions();
 	    }, (error) => { console.log("error deleting")});
 	  }, (error) => {console.log("error creating/opening db")});
 	}

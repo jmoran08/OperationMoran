@@ -18,7 +18,7 @@
       <button ion-button icon-only (click)="openCustomPatternModal()">
         <ion-icon name="add-circle"></ion-icon>
       </button>
-      <button ion-button icon-only (click)="deleteAllInstructionsForPattern(patterns.patternId)">
+      <button ion-button icon-only (click)="deleteAllInstructionsForPattern()">
         <ion-icon name="trash"></ion-icon>
       </button>
       <button ion-button icon-only (click)="dropTables()">
@@ -39,7 +39,7 @@
           Row: {{instruction.patternRow}}<br>
           Col: {{instruction.patternCol}}
         </p>
-        <button ion-button icon-only (click)="deleteOneItem(pattern.instructionId)">
+        <button ion-button icon-only (click)="deleteOneItem(instruction.instructionId)">
         <ion-icon name="remove-circle"></ion-icon>
       </button>
       </ion-item>
