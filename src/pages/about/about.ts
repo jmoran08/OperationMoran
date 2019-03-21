@@ -81,7 +81,27 @@ export class AboutPage {
 
   //BEGINNING OF SQLITE
 
-	getPatterns() {
+	getPatterns(){
+  		this.sqlite.create({
+	    name: 'ionicdb.db',
+	    location: 'default'
+	  }).then((db: SQLiteObject) => {
+	  	db.executeSql('CREATE TABLE IF NOT EXISTS pattern(patternId INTEGER PRIMARY KEY, patternName TEXT, custom INTEGER)', []).then((resPattern) => {
+	    	console.log('Executed SQL create');
+	    	this.patterns = [];
+		    db.executeSql('SELECT * FROM pattern ORDER BY patternId DESC', [])
+		    .then((resPatterns) => {
+		    	for(var i=0; i < resPatterns.rows.length; i++){
+		    		this.patterns.push({patternId: resPatterns.rows.item(i).patternId, patternName: resPatterns.rows.item(i).patternName, custom: resPatterns.rows.item(i).custom});
+		    	}
+		    }, (error) => { console.log("error selecting patterns"); });
+		    
+	    }, (error) => {console.log("error creating pattern table")});
+	    
+	  }, (error) => { console.log("error sql create")});
+  	}
+
+	getPatternsAndInstructions() {
   		console.log("in get data");
 	  this.sqlite.create({
 	    name: 'ionicdb.db',

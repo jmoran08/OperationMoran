@@ -27,8 +27,8 @@ export class CustomPatternSelectModalPage {
   }
 
   ionViewDidLoad() {
-    this.patterns = this.navParams.get('pattern');
-    this.instructions = this.patterns.instructions;
+    this.pattern = this.navParams.get('pattern');
+    this.getInstructions(this.pattern.patternId);
   }
 
   getInstructions(patternId) {
