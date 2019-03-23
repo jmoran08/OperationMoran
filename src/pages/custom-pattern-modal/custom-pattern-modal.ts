@@ -73,7 +73,7 @@ export class CustomPatternModalPage {
   }
 
   setInstructionsAndClose(){
-  	this.global.setInstructions(this.instructions);
+  	//this.global.setInstructions(this.instructions);
   	this.viewCtrl.dismiss(this.instructions);
   }
 

@@ -15,10 +15,13 @@
       My Patterns
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="openCustomPatternModal()">
+    	<button ion-button icon-only *ngIf="editMode == 0" (click)="editModeToggle()">
+        <ion-icon name="create"></ion-icon>
+      </button>
+      <button ion-button icon-only *ngIf="editMode == 1" (click)="openCustomPatternModal()">
         <ion-icon name="add-circle"></ion-icon>
       </button>
-      <button ion-button icon-only (click)="deleteAllInstructionsForPattern()">
+      <button ion-button icon-only *ngIf="editMode == 1" (click)="deleteAllInstructionsForPattern()">
         <ion-icon name="trash"></ion-icon>
       </button>
       <button ion-button icon-only (click)="dropTables()">
@@ -30,8 +33,10 @@
 
 <ion-content padding>
   <h2>Pattern List</h2>
+  <button ion-button color="primary" *ngIf="editMode == 1" (click)="saveCustomPattern()">Save</button>
+  <button ion-button color="primary" *ngIf="editMode == 1" (click)="cancelEdit()">Cancel</button>
   <ion-list>
-    <ion-item-sliding *ngFor="let instruction of instructions; let i=index">
+    <ion-item-sliding *ngFor="let instruction of allInstructions; let i=index">
       <ion-item nopadding>
         <p>
           Id: {{instruction.instructionId}}<br>
@@ -39,7 +44,7 @@
           Row: {{instruction.patternRow}}<br>
           Col: {{instruction.patternCol}}
         </p>
-        <button ion-button icon-only (click)="deleteOneItem(instruction.instructionId)">
+        <button ion-button icon-only *ngIf="editMode == 1" (click)="deleteOneItem(instruction.instructionId)">
         <ion-icon name="remove-circle"></ion-icon>
       </button>
       </ion-item>

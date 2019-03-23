@@ -79,6 +79,15 @@ export class AboutPage {
   	this.prebuiltSelectionMade = false;
   }
 
+  addNewPattern(){
+  	let chooseModal = this.modalCtrl.create('CustomPatternSelectModalPage');
+	 	chooseModal.onDidDismiss(data => {
+	 		this.getPatterns();
+	     
+		});
+	chooseModal.present();
+  }
+
   //BEGINNING OF SQLITE
 
 	getPatterns(){

@@ -4,7 +4,7 @@
       About
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="setPrebuiltPatterns()">
+      <button ion-button icon-only (click)="addNewPattern()">
         <ion-icon name="add-circle"></ion-icon>
       </button>
       <button ion-button icon-only (click)="deleteAllCustomData()">
@@ -17,6 +17,7 @@
 <ion-content padding>
 		<button ion-button class="fullWidthButton" color="primary" (click) ="random()">Random</button>
 		<button ion-button class="fullWidthButton" color="secondary" (click) ="openPrebuiltModal()">Prebuilt</button>
+		<button ion-button class="fullWidthButton" color="primary" (click) ="setPrebuiltPatterns()">Set Prebuilts</button>
 		<div *ngIf="prebuiltSelectionMade">
 		<ion-icon name="close" (click)='removePrebuiltSelection()'></ion-icon>
 		<ion-label>{{prebuiltChosen}}</ion-label>
