@@ -20,11 +20,10 @@ import { ViewController, ModalController } from 'ionic-angular';
 export class CustomPatternSelectModalPage {
 
 	pattern: any = [];
-	instructions: any = [];
-	newInstructions: any = [];
 	allInstructions: any = [];
 	addMode: any;
 	editMode: any;
+	updateMade: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sqlite: SQLite, private platform: Platform, public modalCtrl : ModalController, public viewCtrl: ViewController) {
   	
@@ -63,12 +62,13 @@ export class CustomPatternSelectModalPage {
 		    db.executeSql('SELECT * FROM instruction WHERE pattern_id = ' + this.pattern.patternId + ' ORDER BY instructionId', [])
 		    .then((res) => {
 		      
-		      this.instructions = [];
 		      this.allInstructions = [];
 		      for(var i=0; i<res.rows.length; i++) {
-		        this.instructions.push({instructionId:res.rows.item(i).instructionId,patternName: res.rows.item(i).pattern_id, patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol});
 		        this.allInstructions.push({instructionId:res.rows.item(i).instructionId,patternName: res.rows.item(i).pattern_id, patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol});
 		      }
+		      	this.editMode = 0;
+				this.addMode = 0;
+				this.updateMade = 0;
 		    }, (error) => { console.log("error selecting"); console.log(error.message) });
 	    }, (error) => { console.log("error creating instruction table"); console.log(error.message);});
 	  	}, (error) => {console.log("error creating pattern table"); console.log(error.message);});
@@ -83,11 +83,17 @@ export class CustomPatternSelectModalPage {
 		else{
 			this.updateCustomPattern();
 		}
-		this.editMode = 0;
 	}
 
 	cancelEdit(){
-		this.editMode = 0;
+		if(this.editMode === 1){
+			this.editMode = 0;
+			this.getInstructions();
+		}
+		else if(this.addMode === 1){
+			this.addMode = 0;
+			this.closeChooseCustomPatternModal();
+		}
 	}
 
 	//CREATE
@@ -105,12 +111,13 @@ export class CustomPatternSelectModalPage {
 			      	db.executeSql(p, [null, "Custom Pattern", 1])
 			        .then((res) => {
 			        		this.pattern = res;
+			        		console.log("name: " + this.pattern.patternName);
 				        	//There are also instructions to be added while creating new pattern
-				        	if(this.newInstructions.length > 0){
+				        	if(this.allInstructions.length > 0){
 				        		//INSERT NEW INSTRUCTIONS
 					          let q = "INSERT INTO instruction VALUES (?, ?, ?, ?, ?)";
-						      for(var i = 0; i < this.newInstructions.length; i++){
-							      db.executeSql(q, [null, res.insertId,this.newInstructions[i].patternType,this.newInstructions[i].patternRow,this.newInstructions[i].patternCol])
+						      for(var i = 0; i < this.allInstructions.length; i++){
+							      db.executeSql(q, [null, res.insertId,this.allInstructions[i].patternType,this.allInstructions[i].patternRow,this.allInstructions[i].patternCol])
 							        .then((res) => {
 							          this.getInstructions();
 							        }, (error) =>  {
@@ -146,22 +153,29 @@ export class CustomPatternSelectModalPage {
 	      let p = 'UPDATE pattern SET patternName = "Name" WHERE patternId = ' + this.pattern.patternId;
 	      db.executeSql(p, [])
 	        .then((res) => {
-	        	//DELETE ALL INSTRUCTIONS BEFORE SAVING ALL
-	        	db.executeSql('DELETE FROM instruction WHERE pattern_id = ' + this.pattern.patternId, [])
-			    .then(res => {
-			      let q = "INSERT INTO instruction VALUES (?, ?, ?, ?, ?)";
-			      for(var i = 0; i < this.allInstructions.length; i++){
-			      		//SAVE ALL INSTRUCTIONS (TODO - IN ORDER SHOWN ON UI)
-				      db.executeSql(q, [null, this.pattern.patternId,this.allInstructions[i].patternType,this.allInstructions[i].patternRow,this.allInstructions[i].patternCol])
-				        .then((res) => {
-				          this.getInstructions();
-				        }, (error) =>  {
-				          console.log("error inserting to instructions");
-				          console.log(error.message);
-				        });
-			        }
-			    }, (error) => { console.log("error deleting"); console.log(error.message)});
-		        	
+	        	//DELETE ALL INSTRUCTIONS BEFORE SAVING ALL - TO DO: only do if update made
+	        	console.log("update made: " + this.updateMade);
+	        	if(this.updateMade === 1){
+		        	db.executeSql('DELETE FROM instruction WHERE pattern_id = ' + this.pattern.patternId, [])
+				    .then(res => {
+				      let q = "INSERT INTO instruction VALUES (?, ?, ?, ?, ?)";
+				      for(var i = 0; i < this.allInstructions.length; i++){
+				      		//SAVE ALL INSTRUCTIONS (TODO - IN ORDER SHOWN ON UI)
+					      db.executeSql(q, [null, this.pattern.patternId,this.allInstructions[i].patternType,this.allInstructions[i].patternRow,this.allInstructions[i].patternCol])
+					        .then((res) => {
+					          
+					        }, (error) =>  {
+					          console.log("error inserting to instructions");
+					          console.log(error.message);
+					        });
+				        }
+				        this.getInstructions();
+				    }, (error) => { console.log("error deleting"); console.log(error.message)});
+				}
+				else{
+					this.getInstructions();
+				}
+
 	        }, (error) =>  {
 	          console.log("error updating pattern");
 	          console.log(error.message);
@@ -171,6 +185,20 @@ export class CustomPatternSelectModalPage {
 	      console.log("error creating/opening add");
 	    });
 	    
+	}
+
+	deleteAllInstructions(){
+		this.allInstructions = [];
+		this.updateMade = 1;
+	}
+
+	deleteOneInstruction(instructionId){
+		for(var i = 0; i < this.allInstructions.length; i++){
+			if(this.allInstructions[i].instructionId === instructionId){
+				this.allInstructions.splice(i, 1);
+				this.updateMade = 1;
+			}
+		}
 	}
 
 	//DELETE ALL
@@ -206,8 +234,8 @@ export class CustomPatternSelectModalPage {
 		  chooseModal.onDidDismiss(data => {
 		     if(data != ""){
 		     	for(var i=0; i < data.length; i++){
-		     		this.newInstructions.push({patternType:data[i].type,patternRow:data[i].row,patternCol:data[i].col});
 		     		this.allInstructions.push({patternType:data[i].type,patternRow:data[i].row,patternCol:data[i].col});
+		     		this.updateMade = 1;
 		     	}
 		     }
 			});
