@@ -15,21 +15,10 @@
 </ion-header>
 
 <ion-content padding>
-		<button ion-button class="fullWidthButton" color="primary" (click) ="random()">Random</button>
-		<button ion-button class="fullWidthButton" color="secondary" (click) ="openPrebuiltModal()">Prebuilt</button>
-		<button ion-button class="fullWidthButton" color="primary" (click) ="setPrebuiltPatterns()">Set Prebuilts</button>
-		<div *ngIf="prebuiltSelectionMade">
-		<ion-icon name="close" (click)='removePrebuiltSelection()'></ion-icon>
-		<ion-label>{{prebuiltChosen}}</ion-label>
-		</div>
-		<button ion-button class="fullWidthButton" color="danger" (click) ="openCustomModal()">Custom</button>
-		<button ion-button class="fullWidthButton" color="danger" (click) ="openCustomSelectModal()">Custom Select</button>
-
-		<div class="square-container" *ngFor="let pattern of patterns; let i=index">
-		  <div class="square" (click) ="openCustomSelectModal(pattern)">
-		    <div class="content">{{pattern.patternName}}</div>
-		    <div [hidden]="true">{{pattern}}</div>
-		  </div>
-		</div>
-		
+	<div class="square-container" *ngFor="let pattern of patterns; let i=index">
+	  <div class="square" (click) ="openCustomSelectModal(pattern)">
+	    <div class="content">{{pattern.patternName}}</div>
+	    <div [hidden]="true">{{pattern}}</div>
+	  </div>
+	</div>
 </ion-content>

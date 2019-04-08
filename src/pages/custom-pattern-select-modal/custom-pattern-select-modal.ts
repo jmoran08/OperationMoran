@@ -24,6 +24,7 @@ export class CustomPatternSelectModalPage {
 	addMode: any;
 	editMode: any;
 	updateMade: any;
+	title: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sqlite: SQLite, private platform: Platform, public modalCtrl : ModalController, public viewCtrl: ViewController, public global: GlobalVars) {
   	
@@ -36,10 +37,12 @@ export class CustomPatternSelectModalPage {
   	if(this.pattern != null){
   		this.addMode = 0;
   		this.editMode = 0;
+  		this.title = this.pattern.patternName;
   		this.getInstructions();
   	}
   	else{
   		this.addMode = 1;
+  		this.title = "New Pattern";
   		this.editMode = 0;
   	}
     
@@ -243,9 +246,8 @@ export class CustomPatternSelectModalPage {
 	  }
 
 setPattern(){
-	console.log("setting pattern");
-	console.log(this.allInstructions[0]);
-	 this.global.setInstructions(this.allInstructions);
+	this.global.setInstructions(this.allInstructions);
+	this.viewCtrl.dismiss("");
 }
 
   closeChooseCustomPatternModal(){
