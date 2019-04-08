@@ -256,9 +256,9 @@ export class HomePage {
 						}
 						
 						var table = (<HTMLTableElement>$(".positionTable")[0]);
-					    var cell = table.rows[this.instructions[i].row].cells[this.instructions[i].col]; 
+					    var cell = table.rows[this.instructions[i].patternRow].cells[this.instructions[i].patternCol]; 
 						var $cell = $(cell);
-						switch(this.instructions[i].type){
+						switch(this.instructions[i].patternType){
 							case "ground":
 								color = "green";
 								this.playType = "Ground Ball";

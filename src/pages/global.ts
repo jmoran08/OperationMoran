@@ -8,6 +8,7 @@ export class GlobalVars {
 	}
 
 	setInstructions(value){
+		console.log("set instructions: " + value);
 		this.instructions = value;
 	}
 

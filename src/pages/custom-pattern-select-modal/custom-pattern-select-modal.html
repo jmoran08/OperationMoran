@@ -12,7 +12,7 @@
       </button>
   </ion-buttons>
     <ion-title>
-      My Patterns
+      {{pattern.patternName}}
     </ion-title>
     <ion-buttons end>
     	<button ion-button icon-only *ngIf="editMode == 0 && addMode == 0" (click)="editModeToggle()">
@@ -32,7 +32,8 @@
 </ion-header>
 
 <ion-content padding>
-  <h2>Pattern List</h2>
+  <h2>Instructions</h2>
+  <button ion-button class="secondary" color="primary" *ngIf="editMode == 0 && addMode == 0" (click) ="setPattern()">Set</button>
   <button ion-button color="primary" *ngIf="editMode == 1 || addMode == 1" (click)="saveCustomPattern()">Save</button>
   <button ion-button color="primary" *ngIf="editMode == 1 || addMode == 1" (click)="cancelEdit()">Cancel</button>
   <ion-list>

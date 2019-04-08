@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Platform } from 'ionic-angular';
 import { ViewController, ModalController } from 'ionic-angular';
-
+import { GlobalVars } from '../global';
 
 /**
  * Generated class for the CustomPatternSelectModalPage page.
@@ -25,7 +25,7 @@ export class CustomPatternSelectModalPage {
 	editMode: any;
 	updateMade: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private sqlite: SQLite, private platform: Platform, public modalCtrl : ModalController, public viewCtrl: ViewController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private sqlite: SQLite, private platform: Platform, public modalCtrl : ModalController, public viewCtrl: ViewController, public global: GlobalVars) {
   	
   }
 
@@ -241,6 +241,12 @@ export class CustomPatternSelectModalPage {
 			});
 		chooseModal.present();
 	  }
+
+setPattern(){
+	console.log("setting pattern");
+	console.log(this.allInstructions[0]);
+	 this.global.setInstructions(this.allInstructions);
+}
 
   closeChooseCustomPatternModal(){
   	this.viewCtrl.dismiss("");
