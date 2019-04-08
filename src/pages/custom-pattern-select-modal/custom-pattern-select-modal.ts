@@ -55,6 +55,7 @@ export class CustomPatternSelectModalPage {
   //READ
   getInstructions() {
   		console.log("in get data");
+  		console.log("pattern id to get: " + this.pattern.patternId);
 	  this.sqlite.create({
 	    name: 'ionicdb.db',
 	    location: 'default'
@@ -112,17 +113,17 @@ export class CustomPatternSelectModalPage {
 			    .then((res) => {
 			    	let p = "INSERT INTO pattern VALUES (?, ?, ?)";
 			      	db.executeSql(p, [null, "Custom Pattern", 1])
-			        .then((res) => {
-			        		this.pattern = res;
-			        		console.log("name: " + this.pattern.patternName);
+			        .then((resPattern) => {
 				        	//There are also instructions to be added while creating new pattern
 				        	if(this.allInstructions.length > 0){
+				        	this.getPattern(resPattern.insertId);
 				        		//INSERT NEW INSTRUCTIONS
 					          let q = "INSERT INTO instruction VALUES (?, ?, ?, ?, ?)";
 						      for(var i = 0; i < this.allInstructions.length; i++){
-							      db.executeSql(q, [null, res.insertId,this.allInstructions[i].patternType,this.allInstructions[i].patternRow,this.allInstructions[i].patternCol])
+							      db.executeSql(q, [null, resPattern.insertId,this.allInstructions[i].patternType,this.allInstructions[i].patternRow,this.allInstructions[i].patternCol])
 							        .then((res) => {
-							          this.getInstructions();
+							        	
+							          
 							        }, (error) =>  {
 							          console.log("error inserting to instructions");
 							          console.log(error.message);
@@ -244,6 +245,24 @@ export class CustomPatternSelectModalPage {
 			});
 		chooseModal.present();
 	  }
+
+getPattern(patternId){
+	this.sqlite.create({
+    name: 'ionicdb.db',
+    location: 'default'
+  }).then((db: SQLiteObject) => {
+  	db.executeSql('CREATE TABLE IF NOT EXISTS pattern(patternId INTEGER PRIMARY KEY, patternName TEXT, custom INTEGER)', []).then((resPattern) => {
+	    db.executeSql('SELECT * FROM pattern WHERE patternId = ' + patternId, [])
+	    .then((resPattern) => {
+	    		this.pattern = { patternId: resPattern.rows.item(0).patternId, patternName: resPattern.rows.item(0).patternName, custom: resPattern.rows.item(0).custom };
+	    		this.getInstructions();
+	    }, (error) => { console.log("error selecting patterns"); });
+	    
+    }, (error) => {console.log("error creating pattern table")});
+    
+  }, (error) => { console.log("error sql create")});
+}
+  		
 
 setPattern(){
 	this.global.setInstructions(this.allInstructions);
