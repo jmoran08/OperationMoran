@@ -20,5 +20,8 @@
 	    <div class="content">{{pattern.patternName}}</div>
 	    <div [hidden]="true">{{pattern}}</div>
 	  </div>
+    <button ion-button icon-only *ngIf="pattern.custom == 1" (click)="deleteOnePattern(pattern.patternId)">
+      <ion-icon name="remove-circle"></ion-icon>
+    </button>
 	</div>
 </ion-content>

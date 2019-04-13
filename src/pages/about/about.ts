@@ -83,7 +83,7 @@ export class AboutPage {
   	let chooseModal = this.modalCtrl.create('CustomPatternSelectModalPage');
 	 	chooseModal.onDidDismiss(data => {
 	 		this.getPatterns();
-	     
+
 		});
 	chooseModal.present();
   }
@@ -104,9 +104,9 @@ export class AboutPage {
 		    		this.patterns.push({patternId: resPatterns.rows.item(i).patternId, patternName: resPatterns.rows.item(i).patternName, custom: resPatterns.rows.item(i).custom});
 		    	}
 		    }, (error) => { console.log("error selecting patterns"); });
-		    
+
 	    }, (error) => {console.log("error creating pattern table")});
-	    
+
 	  }, (error) => { console.log("error sql create")});
   	}
 
@@ -125,12 +125,12 @@ export class AboutPage {
 		    .then((resPatterns) => {
 		    	console.log("in select");
 		    	console.log("patterns: " + resPatterns.rows.length);
-		      
+
 		      db.executeSql('SELECT * FROM instruction', [])
 			    .then((resInstructions) => {
 			    	console.log("in select");
 			    	console.log("instructions: " + resInstructions.rows.length);
-			      
+
 			      for(var k=0; k < resPatterns.rows.length; k++){
 			      	var pattern = [];
 			      	var instructions = [];
@@ -149,10 +149,10 @@ export class AboutPage {
 
 			    }, (error) => { console.log("error selecting instructions"); });
 		    }, (error) => { console.log("error selecting patterns"); });
-		    
+
 	    }, (error) => { console.log("error creating instruction table"); console.log(error.message);});
 	  	}, (error) => {console.log("error creating pattern table")});
-	    
+
 	  }, (error) => { console.log("error sql create")});
 	}
 
@@ -169,7 +169,7 @@ export class AboutPage {
 			      for(var i = 0; i < this.prebuilts.basicFielding.length; i++){
 				      db.executeSql(q, [null, res.insertId,this.prebuilts.basicFielding[i].type,this.prebuilts.basicFielding[i].row,this.prebuilts.basicFielding[i].col])
 				        .then((res) => {
-				          
+
 				        }, (error) =>  {
 				          console.log("error inserting to instructions");
 				        });
@@ -178,28 +178,44 @@ export class AboutPage {
 		          console.log("error inserting to pattern");
 		          console.log(error.message);
 		        });
-	      
+
 	    }, (error) => {
 	      console.log("error creating/opening add");
 	    });
 	    this.getPatterns();
 	}
 
+//***THIS IS CURRENTLY BROKEN*** 4/13
 	deleteAllCustomData() {
 	  this.sqlite.create({
 	    name: 'ionicdb.db',
 	    location: 'default'
 	  }).then((db: SQLiteObject) => {
-	    db.executeSql('DELETE FROM pattern WHERE custom = 1', [])
+	    db.executeSql('DELETE FROM instruction WHERE pattern_id IN (SELECT patternId FROM pattern WHERE custom = 1)', [])
 	    .then(res => {
-		    db.executeSql('DELETE FROM instruction WHERE patternId = res.patternId', []).then(res => {
-
-		    }, (error) => {console.log("error deleting all instructions for pattern");
-		    });
-	      console.log(res);
-	      this.getPatterns();
-	    }, (error) => { console.log("error deleting")});
+        db.executeSql('DELETE FROM pattern WHERE custom = 1', [])
+        .then(res => {
+          console.log(res);
+  	      this.getPatterns();
+        }, (error) => { console.log("error deleting all custom patterns"); console.log(error.message);});
+	    }, (error) => { console.log("error deleting all custom instructions"); console.log(error.message);});
 	  }, (error) => {console.log("error creating/opening db")});
 	}
+
+  deleteOnePattern(patternId){
+    this.sqlite.create({
+	    name: 'ionicdb.db',
+	    location: 'default'
+	  }).then((db: SQLiteObject) => {
+	    db.executeSql('DELETE FROM pattern WHERE patternId = ' + patternId, [])
+	    .then(res => {
+		    db.executeSql('DELETE FROM instruction WHERE pattern_id = ' + patternId, []).then(res => {
+          console.log(res);
+  	      this.getPatterns();
+		    }, (error) => {console.log("error deleting all instructions for pattern");
+		    });
+	    }, (error) => { console.log("error deleting")});
+	  }, (error) => {console.log("error creating/opening db")});
+  }
 
 }
