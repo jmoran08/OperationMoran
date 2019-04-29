@@ -47,6 +47,7 @@ export class CustomPatternModalPage {
             $td.css('width', $gsize+'px').css('height', $gsize+'px');
             $td.addClass('unselected');
             $td.addClass('col' + (x-1));
+            $td.addClass('arduinoMap' + (y-1) + (x-1));
             $tr.append($td);
         }
         $tbl.append($tr);
@@ -56,7 +57,7 @@ export class CustomPatternModalPage {
     // attach overlay
     $wrap.append($tbl);
     $src.after($wrap);
-    $('#field-grid-overlay td').click((e) => { 
+    $('#field-grid-overlay td').click((e) => {
     	if(this.previousPosition){
     		this.previousPosition.removeClass('selected');
     		this.previousPosition.addClass('unselected');
@@ -64,7 +65,7 @@ export class CustomPatternModalPage {
     	$(e.currentTarget).toggleClass('selected').toggleClass('unselected');
     	this.previousPosition = $(e.currentTarget);
     	this.previousRow = $(e.currentTarget).parent();
-    	this.positionSelected(); 
+    	this.positionSelected();
     });
   }
 
@@ -89,11 +90,16 @@ export class CustomPatternModalPage {
   }
 
   addInstruction(){
+    //find matching angles & PSI
+    var arduinoMap = this.previousPosition.attr('class').split(' ')[1];
+    arduinoMap = arduinoMap.substring(10, arduinoMap.length);
+    console.log("arduino map id: " + arduinoMap);
   	this.instructions.push(
 		{
-			row: this.previousRow.index(), 
-			col: this.previousPosition.index(), 
-			type: this.play
+			row: this.previousRow.index(),
+			col: this.previousPosition.index(),
+			type: this.play,
+      mapId: arduinoMap
 		});
   	this.previousPosition.removeClass('selected');
   	this.previousPosition.addClass('unselected');

@@ -40,7 +40,6 @@ export class HomePage {
 	previous: Boolean;
 	playing: Boolean;
 	readyToPlay: Boolean;
-
 	constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone, public modalCtrl: ModalController, private platform: Platform, public prebuilts: Prebuilts, public global: GlobalVars) {
 		this.readyToPlay = true;
 		//this.getAllBluetoothDevices();
@@ -78,11 +77,12 @@ export class HomePage {
 		    $wrap.append($tbl);
 		    $src.after($wrap);
 
-		    $('#grid-overlay td').click(function() {
+		    $('#grid-overlay td').click(function(e) {
 		        $(this).toggleClass('selected').toggleClass('unselected');
 		    });
+
 		});
-		
+
 	}
 
 	changeTextColor(){
@@ -93,11 +93,12 @@ export class HomePage {
 	    this.pairedDevices = null;
 	    this.gettingDevices = true;
 	    BluetoothSerial.list().then((success) => {
+        console.log("bluetooth scan succeses");
 	      this.pairedDevices = success;
 	      this.showPairedDevices = true;
 	    },
 	      (err) => {
-
+          console.log("Bluetooth scan error: " + err.message);
 	      })
 	}
 
@@ -127,17 +128,18 @@ export class HomePage {
 		      handler: () => {
 		        BluetoothSerial.connect(address).subscribe((success) => {
 		  		//this.sendData();
+          console.log("connected bluetooth success");
 		},
 		  (err) => {
-
+        console.log("Connect to bluetooth error: " + err.message);
 		  })
-		    
+
 		      }
 		    }
 		  ]
 		});
 		alert.present(
-		  
+
 		);
 	}
 
@@ -192,7 +194,7 @@ export class HomePage {
 	sendData(){
 		BluetoothSerial.write(this.psi + " " + this.servo + " " + this.linear + " ").then((success) => {
 		  console.log("successfully wrote data");
-		  
+
 		},
 		  (err) => {
 		  	console.log("could not write data");
@@ -224,7 +226,9 @@ export class HomePage {
 			this.instructions = this.global.getInstructions();
 			var color;
 			var coordinatesSent = false;
-
+      var psi;
+      var angleServo;
+      var angleLinear;
 			for(var i=0; i < this.instructions.length; i++){
 				if(this.paused){
 					if(this.stopped){
@@ -254,9 +258,9 @@ export class HomePage {
 							this.previousPosition.css('background-color', 'transparent');
 							this.playType = "";
 						}
-						
+
 						var table = (<HTMLTableElement>$(".positionTable")[0]);
-					    var cell = table.rows[this.instructions[i].patternRow].cells[this.instructions[i].patternCol]; 
+					    var cell = table.rows[this.instructions[i].patternRow].cells[this.instructions[i].patternCol];
 						var $cell = $(cell);
 						switch(this.instructions[i].patternType){
 							case "ground":
@@ -277,6 +281,7 @@ export class HomePage {
 						$cell.css('background-color', color);
 						this.previousPosition = $cell;
 						//send motor coordinates
+            console.log("pattern arduino info: " + this.instructions[i].servo + " " + this.instructions[i].linear + " " + this.instructions[i].psi);
 						//wait for "done" response from arduino
 						await this.wait();
 					}
@@ -299,7 +304,7 @@ export class HomePage {
 						//fire
 						coordinatesSent = false;
 					}
-					
+
 				}
 			}
 			if(this.previousPosition){

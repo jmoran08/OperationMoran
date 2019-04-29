@@ -27,7 +27,7 @@ export class CustomPatternSelectModalPage {
 	title: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sqlite: SQLite, private platform: Platform, public modalCtrl : ModalController, public viewCtrl: ViewController, public global: GlobalVars) {
-  	
+
   }
 
   ionViewDidLoad() {
@@ -45,7 +45,7 @@ export class CustomPatternSelectModalPage {
   		this.title = "New Pattern";
   		this.editMode = 0;
   	}
-    
+
   }
 
 
@@ -65,18 +65,22 @@ export class CustomPatternSelectModalPage {
 	    .then((res) => {
 		    db.executeSql('SELECT * FROM instruction WHERE pattern_id = ' + this.pattern.patternId + ' ORDER BY instructionId', [])
 		    .then((res) => {
-		      
+
 		      this.allInstructions = [];
 		      for(var i=0; i<res.rows.length; i++) {
-		        this.allInstructions.push({instructionId:res.rows.item(i).instructionId,patternName: res.rows.item(i).pattern_id, patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol});
-		      }
+            //find matching angles and PSI
+            var mapInfo = [];
+            mapInfo = this.global.getArduinoInfo(res.rows.item(i).patternRow,res.rows.item(i).patternCol, res.rows.item(i).patternType);
+		        this.allInstructions.push({instructionId:res.rows.item(i).instructionId,patternName: res.rows.item(i).pattern_id, patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol,servo: mapInfo.servo,linear:mapInfo.linear,psi:mapInfo.psi});
+            console.log("after assign servo: " + this.allInstructions[i].servo);
+          }
 		      	this.editMode = 0;
 				this.addMode = 0;
 				this.updateMade = 0;
 		    }, (error) => { console.log("error selecting"); console.log(error.message) });
 	    }, (error) => { console.log("error creating instruction table"); console.log(error.message);});
 	  	}, (error) => {console.log("error creating pattern table"); console.log(error.message);});
-	    
+
 	  }, (error) => { console.log("error sql create")});
 	}
 
@@ -122,8 +126,8 @@ export class CustomPatternSelectModalPage {
 						      for(var i = 0; i < this.allInstructions.length; i++){
 							      db.executeSql(q, [null, resPattern.insertId,this.allInstructions[i].patternType,this.allInstructions[i].patternRow,this.allInstructions[i].patternCol])
 							        .then((res) => {
-							        	
-							          
+
+
 							        }, (error) =>  {
 							          console.log("error inserting to instructions");
 							          console.log(error.message);
@@ -139,10 +143,10 @@ export class CustomPatternSelectModalPage {
 				        });
 			    }, (error) => { console.log("error creating instruction table"); console.log(error.message);});
 		  	}, (error) => {console.log("error creating pattern table"); console.log(error.message);});
-	      
+
 	    }, (error) => {
 	      console.log("error creating/opening add");
-	    });    
+	    });
 
 	}
 
@@ -167,7 +171,7 @@ export class CustomPatternSelectModalPage {
 				      		//SAVE ALL INSTRUCTIONS (TODO - IN ORDER SHOWN ON UI)
 					      db.executeSql(q, [null, this.pattern.patternId,this.allInstructions[i].patternType,this.allInstructions[i].patternRow,this.allInstructions[i].patternCol])
 					        .then((res) => {
-					          
+
 					        }, (error) =>  {
 					          console.log("error inserting to instructions");
 					          console.log(error.message);
@@ -184,11 +188,11 @@ export class CustomPatternSelectModalPage {
 	          console.log("error updating pattern");
 	          console.log(error.message);
 	        });
-	      
+
 	    }, (error) => {
 	      console.log("error creating/opening add");
 	    });
-	    
+
 	}
 
 	deleteAllInstructions(){
@@ -238,7 +242,7 @@ export class CustomPatternSelectModalPage {
 		  chooseModal.onDidDismiss(data => {
 		     if(data != ""){
 		     	for(var i=0; i < data.length; i++){
-		     		this.allInstructions.push({patternType:data[i].type,patternRow:data[i].row,patternCol:data[i].col});
+		     		this.allInstructions.push({patternType:data[i].type,patternRow:data[i].row,patternCol:data[i].col,mapId:data[i].mapId});
 		     		this.updateMade = 1;
 		     	}
 		     }
@@ -257,14 +261,17 @@ getPattern(patternId){
 	    		this.pattern = { patternId: resPattern.rows.item(0).patternId, patternName: resPattern.rows.item(0).patternName, custom: resPattern.rows.item(0).custom };
 	    		this.getInstructions();
 	    }, (error) => { console.log("error selecting patterns"); });
-	    
+
     }, (error) => {console.log("error creating pattern table")});
-    
+
   }, (error) => { console.log("error sql create")});
 }
-  		
+
 
 setPattern(){
+  console.log("setting servo: " + this.allInstructions[0].servo);
+  console.log("setting linear: " + this.allInstructions[0].linear);
+  console.log("setting psi: " + this.allInstructions[0].psi);
 	this.global.setInstructions(this.allInstructions);
 	this.viewCtrl.dismiss("");
 }
@@ -291,7 +298,7 @@ setPattern(){
 	  		console.log("error dropping pattern");
 	  		console.log(error.message);
 	  	});
-	  	
+
   	}, (error) => {
 
   	});
