@@ -6,7 +6,7 @@ export class GlobalVars {
 	arduinoInfo: any;
 	constructor(){
 		this.instructions = "";
-		this.arduinoInfo = [{row: 0, col: 0,type: "fly",servo: -45,linear: 45,psi: 200},{row: 0,col: 1,type: "fly",servo: -44,linear: 45,psi: 200}];
+		this.arduinoInfo = [{row: 0, col: 0,type: "fly",servo: -45,linear: 45,psi: 200},{row: 0,col: 1,type: "ground",servo: -44,linear: -15,psi: 200}];
 	}
 
 	setInstructions(value){
@@ -17,7 +17,7 @@ export class GlobalVars {
 	getInstructions(){
 		return this.instructions;
 	}
-	getArduinoInfo(row, col, type){
+	getArduinoInfo(row: any, col: any, type: any){
 		var result = {};
 		for(var i = 0; i < this.arduinoInfo.length; i++){
 			if(this.arduinoInfo[i].row === row && this.arduinoInfo[i].col === col && this.arduinoInfo[i].type === type){

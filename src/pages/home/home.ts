@@ -40,13 +40,13 @@ export class HomePage {
 	previous: Boolean;
 	playing: Boolean;
 	readyToPlay: Boolean;
+  coordinatesSent: Boolean;
+  arduinoDone: Boolean;
+
 	constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone, public modalCtrl: ModalController, private platform: Platform, public prebuilts: Prebuilts, public global: GlobalVars) {
 		this.readyToPlay = true;
-		//this.getAllBluetoothDevices();
-		//BluetoothSerial.enable();
-		//MOST RECENT ATTEMPT that connects - bluetooth stops blinking
-		//this.startScanning();
-		//this.presentModal();
+    this.arduinoDone = false;
+
 		platform.ready().then(() => {
 			this.instructions = global.getInstructions();
 			var $src = $('#grid-source');
@@ -180,7 +180,12 @@ export class HomePage {
 	read(){
 		BluetoothSerial.read().then((data)=>
 		{
-		this.message=data;
+      if(data === null){
+        this.read();
+      }
+      else{
+        this.message=data;
+      }
 
 		})
 	}
@@ -191,8 +196,8 @@ export class HomePage {
 		})
 	}
 
-	sendData(){
-		BluetoothSerial.write(this.psi + " " + this.servo + " " + this.linear + " ").then((success) => {
+	sendData(servo, linear, psi){
+		BluetoothSerial.write(servo + " " + linear + " " + psi + " ").then((success) => {
 		  console.log("successfully wrote data");
 
 		},
@@ -201,147 +206,133 @@ export class HomePage {
 		  })
 	}
 
-	readData(){
-		BluetoothSerial.read().then((data) => {
-		  	console.log("DATA: " + data);
-		  	this.feedback = data;
-		});
-	}
+  async readData(){
+    BluetoothSerial.read().then((data) => {
+      if(data === "edon"){
+        console.log("I got data: " + data);
+        this.coordinatesSent = false;
+        this.feedback = data;
+      }
+    });
+  }
 
 	async wait() {
 		return new Promise(function(resolve) {
-			setTimeout(resolve, 2000);
+			setTimeout(resolve, 500);
 		});
 	}
 
-	async playPrebuilt() {
-		var globeInstruct = this.global.getInstructions();
-		if(this.global.getInstructions() === ""){
+  async play(){
+    this.instructions = this.global.getInstructions();
+    this.coordinatesSent = false;
+    this.feedback = "";
+    this.playing = true;
+    this.paused = false;
+    this.stopped = false;
+    this.previous = false;
+    var waitUntilDone = false;
+    var color;
+    var psi;
+    var angleServo;
+    var angleLinear;
+    if(this.instructions === ""){
 			this.displayNoInstructionsPopup();
 		}
-		else{
-			this.playing = true;
-			this.readyToPlay = false;
-			this.stopped = false;
-			this.instructions = this.global.getInstructions();
-			var color;
-			var coordinatesSent = false;
-      var psi;
-      var angleServo;
-      var angleLinear;
-			for(var i=0; i < this.instructions.length; i++){
-				if(this.paused){
-					if(this.stopped){
-						//this.stopped = false;
-						//this.paused = false;
-						break;
-					}
-					i--;
-					await this.wait();
-				}
-				else if(this.stopped){
-					//this.stopped = false;
-					break;
-				}
-				else{
-					if(coordinatesSent){
-						i--;
-					}
-					//if the coordinates have not been sent, send coordinates
-					else{
-						if(this.previous){
-							coordinatesSent = false;
-							i = i-2;
-							this.previous = false;
-						}
-						if(this.previousPosition){
-							this.previousPosition.css('background-color', 'transparent');
-							this.playType = "";
-						}
+    else{
+      for(var i=0; i < this.instructions.length; i++)
+      {
+        if(this.playing && this.coordinatesSent){
+          await this.wait();
+          //console.log("in waiting for response mode new play");
+          await this.readData();
+          i--;
 
-						var table = (<HTMLTableElement>$(".positionTable")[0]);
-					    var cell = table.rows[this.instructions[i].patternRow].cells[this.instructions[i].patternCol];
-						var $cell = $(cell);
-						switch(this.instructions[i].patternType){
-							case "ground":
-								color = "green";
-								this.playType = "Ground Ball";
-								break;
-							case "fly":
-								color = "yellow";
-								this.playType = "Fly Ball";
-								break;
-							case "line":
-								color = "red";
-								this.playType = "Line Drive";
-								break;
-							default:
-								break;
-						}
-						$cell.css('background-color', color);
-						this.previousPosition = $cell;
-						//send motor coordinates
-            console.log("pattern arduino info: " + this.instructions[i].servo + " " + this.instructions[i].linear + " " + this.instructions[i].psi);
-						//wait for "done" response from arduino
-						await this.wait();
-					}
-					//once coordinates are sent, fire if not paused or stopped
-					//if paused, don't fire and wait
-					if(this.paused){
-						if(this.stopped){
-							//this.stopped = false;
-							//this.paused = false;
-							break;
-						}
-						coordinatesSent = true;
-					}
-					//if stopped, don't fire and break
-					else if(this.stopped){
-						//this.stopped = false;
-						break;
-					}
-					else{
-						//fire
-						coordinatesSent = false;
-					}
+          continue;
+        }
+        else if(this.paused){
+          console.log("in pause mode new play");
+          i--;
+          continue;
+        }
+        else if((!this.playing && this.stopped) || waitUntilDone){
+          console.log("in stop mode new play");
+          break;
+        }
+        else{
+          //console.log("sending from new play");
+          //send instructions
+          if(this.previousPosition){
+            this.previousPosition.css('background-color', 'transparent');
+            this.playType = "";
+          }
 
-				}
-			}
-			if(this.previousPosition){
-				this.previousPosition.css('background-color', 'transparent');
-				this.previousPosition = null;
-				this.playType = "";
-			}
-			this.playing = false;
-			this.paused = false;
-			this.stopped = false;
-			this.readyToPlay = true;
-		}
+          var table = (<HTMLTableElement>$(".positionTable")[0]);
+            var cell = table.rows[this.instructions[i].patternRow].cells[this.instructions[i].patternCol];
+          var $cell = $(cell);
+          switch(this.instructions[i].patternType){
+            case "ground":
+              color = "green";
+              this.playType = "Ground Ball";
+              break;
+            case "fly":
+              color = "yellow";
+              this.playType = "Fly Ball";
+              break;
+            case "line":
+              color = "red";
+              this.playType = "Line Drive";
+              break;
+            default:
+              break;
+          }
+          $cell.css('background-color', color);
+          this.previousPosition = $cell;
+          //send motor coordinates
+          //console.log("pattern arduino info: " + this.instructions[i].servo + " " + this.instructions[i].linear + " " + this.instructions[i].psi);
+          this.sendData(this.instructions[i].servo, this.instructions[i].linear, this.instructions[i].psi);
+          //wait for "done" response from arduino
+          this.coordinatesSent = true;
+          if(i === this.instructions.length - 1){
+            i--;
+            waitUntilDone = true;
+          }
+        }
+      }
+      this.readyToPlay = true;
+      this.stopped = false;
+      this.playing = false;
+      this.paused = false;
+      this.previous = false;
+    }
+  }
 
-	}
+
 
 	pause(){
-		if(this.paused){
-			this.paused = false;
-			this.playing = true;
-		}
-		else{
-			this.paused = true;
-			this.playing = false;
-		}
+		this.previous = false;
+    this.playing = false;
+    this.stopped = false;
+    this.paused = true;
 	}
 
+  unpause(){
+    this.previous = false;
+    this.playing = true;
+    this.stopped = false;
+    this.paused = false;
+  }
+
 	stop(){
-		this.stopped = true;
-		this.playing = false;
-		this.paused = false;
-		this.readyToPlay = true;
+		this.previous = false;
+    this.playing = false;
+    this.stopped = true;
+    this.paused = false;
 	}
 
 	previousInstruction(){
 		this.previous = true;
-		this.paused = false;
-		this.playing = true;
+		this.playing = false;
+    this.stopped = false;
 	}
 
 	displayNoInstructionsPopup() {
