@@ -102,11 +102,6 @@ export class HomePage {
 	      })
 	}
 
-	/*presentModal() {
-	    const modal = this.modalCtrl.create(ModalPage);
-	    modal.present();
-	}*/
-
 	success = (data) => alert(data);
 	fail = (error) => alert(error);
 
@@ -127,7 +122,6 @@ export class HomePage {
 		      text: 'Connect',
 		      handler: () => {
 		        BluetoothSerial.connect(address).subscribe((success) => {
-		  		//this.sendData();
           console.log("connected bluetooth success");
 		},
 		  (err) => {
@@ -227,6 +221,7 @@ export class HomePage {
     this.coordinatesSent = false;
     this.feedback = "";
     this.playing = true;
+    this.readyToPlay = false;
     this.paused = false;
     this.stopped = false;
     this.previous = false;
@@ -250,6 +245,7 @@ export class HomePage {
           continue;
         }
         else if(this.paused){
+          await this.wait();
           console.log("in pause mode new play");
           i--;
           continue;
@@ -303,6 +299,8 @@ export class HomePage {
       this.playing = false;
       this.paused = false;
       this.previous = false;
+      this.previousPosition.css('background-color', 'transparent');
+      this.playType = "";
     }
   }
 
