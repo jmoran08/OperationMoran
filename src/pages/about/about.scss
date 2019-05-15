@@ -1,29 +1,26 @@
 .fullWidthButton{
 	width: 100%;
+	color: white;
+	background-color: green;
 }
 
 * {
   box-sizing: border-box;
 }
 
-.square-container {
-  //padding: 8px;
+.card{
+	background-image: url("../assets/imgs/grassBackground.png");
+	background-size: contain;
 }
 
-.square {
-  width: calc(100% / 3);
-  float: left;
-  position: relative;
-  padding-bottom: calc(100% / 3);
+.title{
+	color: white;
+	float: left;
 }
 
-.square .content {
-    width: calc(100% - 16px);
-    height: calc(100% - 16px);
-    margin: 8px;
-    padding: 16px;
-    position: absolute;
-    color: white;
-    background-color: #0095ff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+.cardButton{
+	float: right;
+	color: black;
+	margin-top: 5%;
+	font-size: 1.5em;
 }

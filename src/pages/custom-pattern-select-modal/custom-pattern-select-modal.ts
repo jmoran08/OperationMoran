@@ -269,9 +269,6 @@ getPattern(patternId){
 
 
 setPattern(){
-  console.log("setting servo: " + this.allInstructions[0].servo);
-  console.log("setting linear: " + this.allInstructions[0].linear);
-  console.log("setting psi: " + this.allInstructions[0].psi);
 	this.global.setInstructions(this.allInstructions);
 	this.viewCtrl.dismiss("");
 }

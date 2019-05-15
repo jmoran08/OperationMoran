@@ -1,27 +1,32 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      About
+      My Fielding Plans
     </ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="addNewPattern()">
-        <ion-icon name="add-circle"></ion-icon>
-      </button>
-      <button ion-button icon-only (click)="deleteAllCustomData()">
-        <ion-icon name="trash"></ion-icon>
-      </button>
-    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-	<div class="square-container" *ngFor="let pattern of patterns; let i=index">
-	  <div class="square" (click) ="openCustomSelectModal(pattern)">
-	    <div class="content">{{pattern.patternName}}</div>
-	    <div [hidden]="true">{{pattern}}</div>
-	  </div>
-    <button ion-button icon-only *ngIf="pattern.custom == 1" (click)="deleteOnePattern(pattern.patternId)">
-      <ion-icon name="remove-circle"></ion-icon>
-    </button>
-	</div>
+<ion-content class="container">
+  <ion-card class="card" *ngFor="let pattern of patterns; let i=index">
+    <ion-card-header (click) ="openCustomSelectModal(pattern)">
+      <ion-card-title class="title">{{pattern.patternName}}</ion-card-title>
+      <div [hidden]="true">{{pattern}}</div>
+      <button class="cardButton">
+        <ion-icon name="remove-circle" *ngIf="pattern.custom == 1" (click)="deleteOnePattern(pattern.patternId)"></ion-icon>
+      </button>
+    </ion-card-header>
+
+    <ion-card-content>
+
+    </ion-card-content>
+
+  </ion-card>
+  <button ion-button class="fullWidthButton" (click)="deleteAllCustomData()">
+    Delete All Plans
+  </button>
+  <ion-fab bottom right class="fabContainer">
+   <button ion-fab (click)="addNewPattern()" class="fabButton">
+     <ion-icon name="add" class="fabIcon"></ion-icon>
+   </button>
+ </ion-fab>
 </ion-content>
