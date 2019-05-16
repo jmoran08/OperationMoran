@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content class="container">
-  <ion-card class="card" *ngFor="let pattern of patterns; let i=index">
+  <ion-card class="patternCard" *ngFor="let pattern of patterns; let i=index">
     <ion-card-header (click) ="openCustomSelectModal(pattern)">
       <ion-card-title class="title">{{pattern.patternName}}</ion-card-title>
       <div [hidden]="true">{{pattern}}</div>
@@ -21,7 +21,8 @@
     </ion-card-content>
 
   </ion-card>
-  <button ion-button class="fullWidthButton" (click)="deleteAllCustomData()">
+  <div class="noPatternMessage" *ngIf="patterns.length == 0">You do not have any patterns.</div>
+  <button ion-button class="fullWidthButton" *ngIf="patterns.length > 0" (click)="deleteAllCustomData()">
     Delete All Plans
   </button>
   <ion-fab bottom right class="fabContainer">

@@ -1,14 +1,10 @@
-.fullWidthButton{
-	width: 100%;
-	color: white;
-	background-color: green;
-}
+
 
 * {
   box-sizing: border-box;
 }
 
-.card{
+.patternCard{
 	background-image: url("../assets/imgs/grassBackground.png");
 	background-size: contain;
 }
@@ -23,4 +19,11 @@
 	color: black;
 	margin-top: 5%;
 	font-size: 1.5em;
+}
+
+.noPatternMessage{
+  color: white;
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 10%;
 }

@@ -80,8 +80,9 @@
 }
 
 .iconStyle{
-	font-size: 10vw;
+	font-size: 5em;
 	margin-right: 15%;
+	color: green;
 }
 
 .iconWrapper{
@@ -90,26 +91,27 @@
 	margin-left: 15%;
 }
 
-.stopIcon{
-	background-color: black;
-	width: 6vw;
-	height: 6vw;
-	margin-right: 15%;
-}
-
 .center{
 	text-align: center;
 }
 
 .full-width{
 	width: 100%;
+	//height: -50%;
 }
 
 .instruction{
 	font-size: 8vw;
+	color: white;
 }
 
-#grid-source { position: absolute; width: 90%; height: 65%;}
+.actionButton{
+	background-color: green;
+	font-size: 2rem;
+	margin-left: -15%;
+}
+
+#grid-source { position: absolute; width: 90%; height: 65%;}//max-height: 65%;}
 #grid-overlay { position: relative; }
 
 .fieldImage { display:block !important; width: 100%; height: 100%;}

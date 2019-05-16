@@ -9,7 +9,7 @@
   <div class="full-width">
     <ion-input class="center instruction" [(ngModel)]="playType"></ion-input>
   </div>
-  <div id="grid-source"><img class="fieldImage" src="../assets/imgs/field.png"></div>
+  <div id="grid-source"><img class="fieldImage" src="../assets/imgs/FieldTemplate-NoBackground-GreenLines-GreyInfield-BlackOutfield.png"></div>
   <!--
   <div class="item fieldpic-border" align="center">
       <ion-checkbox class="firstSelect" disabled="false"></ion-checkbox>
@@ -26,16 +26,17 @@
   </div>
   -->
   <div class="iconWrapper">
-    <ion-icon class="iconStyle" *ngIf="readyToPlay" name="play" (click)='play()'></ion-icon>
+    <button ion-button class="actionButton" *ngIf="readyToPlay" name="play" (click)='play()'>START</button>
     <ion-icon class="iconStyle" *ngIf="playing" name="pause" (click)='pause()'></ion-icon>
     <ion-icon class="iconStyle" *ngIf="paused" name="play" (click)='unpause()'></ion-icon>
-    <ion-icon class="stopIcon" *ngIf="(playing || paused)" (click)='stop()'></ion-icon>
+    <ion-icon class="iconStyle" *ngIf="(playing || paused)" name="square" (click)='stop()'></ion-icon>
     <!--<ion-icon class="iconStyle" name="skip-backward" *ngIf="paused" (click)='previousInstruction()'></ion-icon>-->
   </div>
-  <button ion-button color="primary" (click) ="sendData()">Begin</button>
+
+  <!--<button ion-button color="primary" (click) ="sendData()">Begin</button>
   <button ion-button color="secondary" (click) ="startScanning()">Connect</button>
   <button ion-button color="danger" (click) ="disconnect()">Disconnect</button>
-  <button ion-button color="primary" (click) ="readData()">Feedback</button>
+  <button ion-button color="primary" (click) ="readData()">Feedback</button>-->
 
   <ion-list *ngIf="showPairedDevices">
     <ion-item *ngFor="let device of pairedDevices" (click)='selectDevice(device.id, device.name)'>

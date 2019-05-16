@@ -8,14 +8,14 @@
 
 <ion-content padding class="container">
   <ion-list>
-      <ion-item>
+      <ion-item class="dropdown">
         <ion-label>Field Type</ion-label>
         <ion-select [(ngModel)]="fieldType" (ionChange)="fieldTypeSelected()" interface="popover" placeholder="Select One">
           <ion-option value="baseball">Baseball</ion-option>
           <ion-option value="softball">Softball</ion-option>
         </ion-select>
       </ion-item>
-      <ion-item>
+      <ion-item class="dropdown">
         <ion-label>Skill Level</ion-label>
         <ion-select [(ngModel)]="skillLevel" (ionChange)="skillLevelSelected()" interface="popover" placeholder="Select One">
           <ion-option value="8Under">8u and under</ion-option>
