@@ -86,6 +86,10 @@ export class CustomPatternModalPage {
 			this.play = data;
 			this.addInstruction();
     	}
+      else{
+        this.previousPosition.removeClass('selected');
+    		this.previousPosition.addClass('unselected');
+      }
 	});
   }
 

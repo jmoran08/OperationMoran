@@ -77,10 +77,6 @@ export class HomePage {
 		    $wrap.append($tbl);
 		    $src.after($wrap);
 
-		    $('#grid-overlay td').click(function(e) {
-		        $(this).toggleClass('selected').toggleClass('unselected');
-		    });
-
 		});
 
 	}
@@ -218,22 +214,22 @@ export class HomePage {
 
   async play(){
     this.instructions = this.global.getInstructions();
-    this.coordinatesSent = false;
-    this.feedback = "";
-    this.playing = true;
-    this.readyToPlay = false;
-    this.paused = false;
-    this.stopped = false;
-    this.previous = false;
-    var waitUntilDone = false;
-    var color;
-    var psi;
-    var angleServo;
-    var angleLinear;
     if(this.instructions === ""){
 			this.displayNoInstructionsPopup();
 		}
     else{
+      this.coordinatesSent = false;
+      this.feedback = "";
+      this.playing = true;
+      this.readyToPlay = false;
+      this.paused = false;
+      this.stopped = false;
+      this.previous = false;
+      var waitUntilDone = false;
+      var color;
+      var psi;
+      var angleServo;
+      var angleLinear;
       for(var i=0; i < this.instructions.length; i++)
       {
         if(this.playing && this.coordinatesSent){
@@ -336,8 +332,9 @@ export class HomePage {
 	displayNoInstructionsPopup() {
 	    const alert = this.alertCtrl.create({
 	      title: 'Select Play Type',
-	      subTitle: 'Please select a play type',
-	      buttons: ['OK']
+	      subTitle: 'You must select a play type for the machine to run.',
+	      buttons: ['OK'],
+        cssClass: 'alertCustomCss'
 	    });
 	    alert.present();
 	}

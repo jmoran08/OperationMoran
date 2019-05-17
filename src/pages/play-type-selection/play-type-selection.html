@@ -4,15 +4,15 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
+<ion-header class="popupHeader">
 
-    <ion-title>Play Type Selection</ion-title>
+    <ion-title class="popupTitle">Select Play Type</ion-title>
 
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding class="popupBackground">
   <ion-list>
       <ion-item>
         <ion-label>Play Type</ion-label>
@@ -23,7 +23,6 @@
         </ion-select>
       </ion-item>
     </ion-list>
-      <button ion-button color="primary" (click) ="selectAndClose()">Add Play</button>
-      <button ion-button color="secondary" (click) ="cancel()">Cancel</button>
-
+      <button ion-button class="popupButtonCancel" (click) ="cancel()">Cancel</button>
+      <button ion-button class="popupButtonOk" (click) ="selectAndClose()">Add Play</button>
 </ion-content>

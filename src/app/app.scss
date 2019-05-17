@@ -46,3 +46,26 @@
 	color: white;
 	background-color: grey;
 }
+
+.popupBackground{
+	background-color: grey;
+}
+
+.alertCustomCss {
+  color: white; // text color for basic alerts
+  button {
+      color: white !important;
+      background-color: green !important;
+  }
+  .alert-message {
+      color: white; // text color for confirm alerts
+			font-size: 3em;
+  }
+  .alert-wrapper {
+      background-color: grey;
+  }
+}
+
+button .buttonActive {
+    background: red !important;
+}

@@ -7,9 +7,9 @@
 <ion-header>
 
 <ion-navbar>
-    <ion-title>ModalPage</ion-title>
+    <ion-title>Add Instructions</ion-title>
     <ion-buttons end>
-    <button ion-button (click)="closeModal()">Close</button>
+    <button ion-button (click)="closeModal()">Cancel</button>
 
     </ion-buttons>
 </ion-navbar>
@@ -17,8 +17,8 @@
 </ion-header>
 
 
-<ion-content padding>
-	<div id="field-grid-source"><img class="fieldImage" src="../assets/imgs/field.png"></div>
-	<button ion-button color="secondary" (click) ="setInstructionsAndClose()">Add Instructions</button>
+<ion-content padding class="container">
+	<div id="field-grid-source"><img class="fieldImage" src="../assets/imgs/FieldTemplate-NoBackground-GreenLines-GreyInfield-BlackOutfield.png"></div>
+	<button ion-button class="fullWidthButton greenButton" (click) ="setInstructionsAndClose()">Add</button>
 
 </ion-content>

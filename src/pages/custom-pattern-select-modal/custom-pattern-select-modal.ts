@@ -118,25 +118,25 @@ export class CustomPatternSelectModalPage {
 			    	let p = "INSERT INTO pattern VALUES (?, ?, ?)";
 			      	db.executeSql(p, [null, "Custom Pattern", 1])
 			        .then((resPattern) => {
-				        	//There are also instructions to be added while creating new pattern
-				        	if(this.allInstructions.length > 0){
-				        	this.getPattern(resPattern.insertId);
-				        		//INSERT NEW INSTRUCTIONS
-					          let q = "INSERT INTO instruction VALUES (?, ?, ?, ?, ?)";
-						      for(var i = 0; i < this.allInstructions.length; i++){
-							      db.executeSql(q, [null, resPattern.insertId,this.allInstructions[i].patternType,this.allInstructions[i].patternRow,this.allInstructions[i].patternCol])
-							        .then((res) => {
+                    //There are also instructions to be added while creating new pattern
+  				        	if(this.allInstructions.length > 0){
+                      this.getPattern(resPattern.insertId)
+  				        		//INSERT NEW INSTRUCTIONS
+  					          let q = "INSERT INTO instruction VALUES (?, ?, ?, ?, ?)";
+  						      for(var i = 0; i < this.allInstructions.length; i++){
+  							      db.executeSql(q, [null, resPattern.insertId,this.allInstructions[i].patternType,this.allInstructions[i].patternRow,this.allInstructions[i].patternCol])
+  							        .then((res) => {
 
 
-							        }, (error) =>  {
-							          console.log("error inserting to instructions");
-							          console.log(error.message);
-							        });
-						        }
-						    }
-						    else{
-						    	this.getInstructions();
-						    }
+  							        }, (error) =>  {
+  							          console.log("error inserting to instructions");
+  							          console.log(error.message);
+  							        });
+  						        }
+  						    }
+  						    else{
+                    this.getPattern(resPattern.insertId)
+  						    }
 				        }, (error) =>  {
 				          console.log("error inserting to pattern");
 				          console.log(error.message);
@@ -251,7 +251,7 @@ export class CustomPatternSelectModalPage {
 	  }
 
 getPattern(patternId){
-	this.sqlite.create({
+	return this.sqlite.create({
     name: 'ionicdb.db',
     location: 'default'
   }).then((db: SQLiteObject) => {

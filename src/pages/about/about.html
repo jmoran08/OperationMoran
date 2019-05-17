@@ -8,8 +8,8 @@
 
 <ion-content class="container">
   <ion-card class="patternCard" *ngFor="let pattern of patterns; let i=index">
-    <ion-card-header (click) ="openCustomSelectModal(pattern)">
-      <ion-card-title class="title">{{pattern.patternName}}</ion-card-title>
+    <ion-card-header>
+      <ion-card-title class="title" (click) ="openCustomSelectModal(pattern)">{{pattern.patternName}}</ion-card-title>
       <div [hidden]="true">{{pattern}}</div>
       <button class="cardButton">
         <ion-icon name="remove-circle" *ngIf="pattern.custom == 1" (click)="deleteOnePattern(pattern.patternId)"></ion-icon>
