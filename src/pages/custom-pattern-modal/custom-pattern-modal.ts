@@ -23,6 +23,7 @@ export class CustomPatternModalPage {
 	previousRow: any;
 	play: any;
 	instructions: any;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public popoverCtrl: PopoverController, public global: GlobalVars) {
   	this.instructions = [];
   }
@@ -57,11 +58,15 @@ export class CustomPatternModalPage {
     // attach overlay
     $wrap.append($tbl);
     $src.after($wrap);
+    $('#field-grid-overlay td').css('text-align', 'center');
     $('#field-grid-overlay td').click((e) => {
-    	if(this.previousPosition){
+      //***NEED TO UNSELECT INSTRUCTION IF CLICKED AGAIN
+      //***AND ALSO REMOVE FROM LIST OF INSTRUCTIONS
+      //***AND RELOAD INSTRUCTIONS WITH CORRECT NUMBERS
+    	/*if(this.prevoiusPosition.hasClass('selected')){
     		this.previousPosition.removeClass('selected');
     		this.previousPosition.addClass('unselected');
-    	}
+    	}*/
     	$(e.currentTarget).toggleClass('selected').toggleClass('unselected');
     	this.previousPosition = $(e.currentTarget);
     	this.previousRow = $(e.currentTarget).parent();
@@ -105,8 +110,21 @@ export class CustomPatternModalPage {
 			type: this.play,
       mapId: arduinoMap
 		});
-  	this.previousPosition.removeClass('selected');
-  	this.previousPosition.addClass('unselected');
+    console.log(this.instructionCount);
+    $(this.previousPosition).html(this.instructions.length);
+    switch(this.play){
+      case 'fly':
+        $(this.previousPosition).css('background-color', 'yellow');
+        break;
+      case 'ground':
+        $(this.previousPosition).css('background-color', 'green');
+        break;
+      case 'line':
+      $(this.previousPosition).css('background-color', 'red');
+        break;
+      default:
+        break;
+    }
 
   }
 
