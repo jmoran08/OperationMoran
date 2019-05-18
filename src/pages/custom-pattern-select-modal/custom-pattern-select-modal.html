@@ -33,7 +33,7 @@
 
 <ion-content padding class="container">
   <h2 class="header">Instructions</h2>
-  <button ion-button class="fullWidthButton" color="primary" *ngIf="editMode == 0 && addMode == 0" (click) ="setPattern()">Select</button>
+  <button ion-button class="fullWidthButton" color="primary" *ngIf="editMode == 0 && addMode == 0 && allInstructions.length > 0" (click) ="setPattern()">Select</button>
   <ion-card class="instructionCard" *ngFor="let instruction of allInstructions; let i=index">
     <ion-card-header>
       <ion-card-title class="title">
@@ -42,7 +42,7 @@
         Row: {{instruction.patternRow}}
         Col: {{instruction.patternCol}}
       <button class="cardButton">
-        <ion-icon name="remove-circle" *ngIf="editMode == 1 || addMode == 1" (click)="deleteAllInstructions()"></ion-icon>
+        <ion-icon name="remove-circle" *ngIf="editMode == 1 || addMode == 1" (click)="deleteOneInstruction(instruction.instructionId)"></ion-icon>
       </button>
       </ion-card-title>
     </ion-card-header>
@@ -52,9 +52,12 @@
     </ion-card-content>
 
   </ion-card>
-  <div class="noInstructionsMessage" *ngIf="(editMode == 1 || addMode == 1) && allInstructions.length == 0" >There are no instructions for this pattern.</div>
+  <div class="noInstructionsMessage" *ngIf="allInstructions.length == 0" >There are no instructions for this pattern.</div>
   <button ion-button class="fullWidthButton" *ngIf="(editMode == 1 || addMode == 1) && allInstructions.length > 0" (click)="deleteAllInstructions()">
     Delete All Instructions
+  </button>
+  <button ion-button class="fullWidthButton" (click)="deletePattern(pattern.patternId)">
+    Delete Pattern
   </button>
   <ion-fab bottom right class="fabContainer">
    <button ion-fab *ngIf="editMode == 1 || addMode == 1" (click)="openCustomPatternModal()" class="fabButton">

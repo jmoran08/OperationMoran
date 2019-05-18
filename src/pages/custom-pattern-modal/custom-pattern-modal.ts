@@ -31,7 +31,7 @@ export class CustomPatternModalPage {
     console.log('ionViewDidLoad CustomPatternModalPage');
     var $src = $('#field-grid-source');
     var $wrap = $('<div id="field-grid-overlay"></div>');
-    var $gsize = 20;
+    var $gsize = 40;
 
     var $cols = Math.ceil($src.find('img').innerWidth() / $gsize);
     var $rows = Math.ceil($src.find('img').innerHeight() / $gsize);

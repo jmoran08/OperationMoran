@@ -51,7 +51,7 @@ export class HomePage {
 			this.instructions = global.getInstructions();
 			var $src = $('#grid-source');
 		    var $wrap = $('<div id="grid-overlay"></div>');
-		    var $gsize = 20;
+		    var $gsize = 40;
 
 		    var $cols = Math.ceil($src.find('img').innerWidth() / $gsize);
 		    var $rows = Math.ceil($src.find('img').innerHeight() / $gsize);
@@ -280,7 +280,7 @@ export class HomePage {
           $cell.css('background-color', color);
           this.previousPosition = $cell;
           //send motor coordinates
-          //console.log("pattern arduino info: " + this.instructions[i].servo + " " + this.instructions[i].linear + " " + this.instructions[i].psi);
+          console.log("pattern arduino info: " + this.instructions[i].servo + " " + this.instructions[i].linear + " " + this.instructions[i].psi);
           this.sendData(this.instructions[i].servo, this.instructions[i].linear, this.instructions[i].psi);
           //wait for "done" response from arduino
           this.coordinatesSent = true;

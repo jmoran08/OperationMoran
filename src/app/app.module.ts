@@ -7,6 +7,7 @@ import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
+import { SplashPage } from '../pages/splash/splash';
 import { GlobalVars } from '../pages/global'
 import { Prebuilts } from '../pages/prebuilts';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -20,7 +21,8 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    SplashPage
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,8 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    SplashPage
   ],
   providers: [
     StatusBar,
@@ -40,7 +43,7 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
     BluetoothSerial,
     Prebuilts,
     GlobalVars,
-    SQLite, 
+    SQLite,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -267,6 +267,21 @@ getPattern(patternId){
   }, (error) => { console.log("error sql create")});
 }
 
+deletePattern(patternId){
+  this.sqlite.create({
+    name: 'ionicdb.db',
+    location: 'default'
+  }).then((db: SQLiteObject) => {
+    db.executeSql('DELETE FROM pattern WHERE patternId = ' + patternId, [])
+    .then(res => {
+      db.executeSql('DELETE FROM instruction WHERE pattern_id = ' + patternId, []).then(res => {
+        console.log(res);
+        this.closeChooseCustomPatternModal();
+      }, (error) => {console.log("error deleting all instructions for pattern");
+      });
+    }, (error) => { console.log("error deleting")});
+  }, (error) => {console.log("error creating/opening db")});
+}
 
 setPattern(){
 	this.global.setInstructions(this.allInstructions);

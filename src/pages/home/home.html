@@ -33,10 +33,10 @@
     <!--<ion-icon class="iconStyle" name="skip-backward" *ngIf="paused" (click)='previousInstruction()'></ion-icon>-->
   </div>
 
-  <!--<button ion-button color="primary" (click) ="sendData()">Begin</button>
+  <!--<button ion-button color="primary" (click) ="sendData()">Begin</button>-->
   <button ion-button color="secondary" (click) ="startScanning()">Connect</button>
   <button ion-button color="danger" (click) ="disconnect()">Disconnect</button>
-  <button ion-button color="primary" (click) ="readData()">Feedback</button>-->
+  <!--<button ion-button color="primary" (click) ="readData()">Feedback</button>-->
 
   <ion-list *ngIf="showPairedDevices">
     <ion-item *ngFor="let device of pairedDevices" (click)='selectDevice(device.id, device.name)'>
