@@ -25,7 +25,13 @@ export class CustomPatternModalPage {
 	instructions: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public popoverCtrl: PopoverController, public global: GlobalVars) {
-  	this.instructions = [];
+    this.instructions = [];
+    var paramInstructions = this.navParams.get('savedInstructions');
+    if(paramInstructions != null){
+        for(var i=0; i < paramInstructions.length; i++){
+          this.instructions.push({row: paramInstructions[i].patternRow, col: paramInstructions[i].patternCol, type: paramInstructions[i].patternType});
+        }
+    }
   }
 
   ionViewDidLoad() {
@@ -83,6 +89,8 @@ export class CustomPatternModalPage {
       	this.positionSelected();
       }
     });
+    this.showSavedInstructions();
+
   }
 
   closeModal(){
@@ -161,20 +169,29 @@ export class CustomPatternModalPage {
           break;
       }
     }
-    /*.html(this.instructions.length);
-    switch(this.play){
-      case 'fly':
-        $(this.previousPosition).css('background-color', 'yellow');
-        break;
-      case 'ground':
-        $(this.previousPosition).css('background-color', 'green');
-        break;
-      case 'line':
-      $(this.previousPosition).css('background-color', 'red');
-        break;
-      default:
-        break;
-    }*/
+  }
+
+  showSavedInstructions(){
+      console.log("saved instructions: " + this.instructions.length);
+      var square;
+      for(var i=0; i < this.instructions.length; i++){
+        square = $('tr.row' + this.instructions[i].row).find('td.col' + this.instructions[i].col);
+        square.addClass('selected');
+        square.html(i+1);
+        switch(this.instructions[i].type){
+          case 'fly':
+            square.css('background-color', 'yellow');
+            break;
+          case 'ground':
+            square.css('background-color', 'green');
+            break;
+          case 'line':
+          square.css('background-color', 'red');
+            break;
+          default:
+            break;
+        }
+      }
   }
 
 }
