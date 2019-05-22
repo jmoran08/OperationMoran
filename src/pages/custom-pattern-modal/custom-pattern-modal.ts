@@ -143,6 +143,24 @@ export class CustomPatternModalPage {
       return target.attr('class').indexOf(instruction.col) <= -1 || target.parent().attr('class').indexOf(instruction.row) <= -1;
     });
     console.log("New instruction count: " + this.instructions.length);
+    var square;
+    for(var i=0; i < this.instructions.length; i++){
+      square = $('tr.row' + this.instructions[i].row).find('td.col' + this.instructions[i].col);
+      square.html(i+1);
+      switch(this.instructions[i].type){
+        case 'fly':
+          square.css('background-color', 'yellow');
+          break;
+        case 'ground':
+          square.css('background-color', 'green');
+          break;
+        case 'line':
+        square.css('background-color', 'red');
+          break;
+        default:
+          break;
+      }
+    }
     /*.html(this.instructions.length);
     switch(this.play){
       case 'fly':
