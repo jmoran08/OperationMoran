@@ -67,10 +67,21 @@ export class CustomPatternModalPage {
     		this.previousPosition.removeClass('selected');
     		this.previousPosition.addClass('unselected');
     	}*/
-    	$(e.currentTarget).toggleClass('selected').toggleClass('unselected');
-    	this.previousPosition = $(e.currentTarget);
-    	this.previousRow = $(e.currentTarget).parent();
-    	this.positionSelected();
+      if($(e.currentTarget).hasClass('selected')){
+        $(e.currentTarget).removeClass('selected');
+        $(e.currentTarget).addClass('unselected');
+        $(e.currentTarget).css('background-color', 'transparent');
+        $(e.currentTarget).html("");
+        this.recountInstructions($(e.currentTarget));
+      }
+      else{
+      	//$(e.currentTarget).toggleClass('selected').toggleClass('unselected');
+        $(e.currentTarget).removeClass('unselected');
+        $(e.currentTarget).addClass('selected');
+        this.previousPosition = $(e.currentTarget);
+      	this.previousRow = $(e.currentTarget).parent();
+      	this.positionSelected();
+      }
     });
   }
 
@@ -109,8 +120,7 @@ export class CustomPatternModalPage {
 			col: this.previousPosition.index(),
 			type: this.play,
       mapId: arduinoMap
-		});
-    console.log(this.instructionCount);
+		});;
     $(this.previousPosition).html(this.instructions.length);
     switch(this.play){
       case 'fly':
@@ -126,6 +136,27 @@ export class CustomPatternModalPage {
         break;
     }
 
+  }
+
+  recountInstructions(target: any){
+    this.instructions = this.instructions.filter(function( instruction ) {
+      return target.attr('class').indexOf(instruction.col) <= -1 || target.parent().attr('class').indexOf(instruction.row) <= -1;
+    });
+    console.log("New instruction count: " + this.instructions.length);
+    /*.html(this.instructions.length);
+    switch(this.play){
+      case 'fly':
+        $(this.previousPosition).css('background-color', 'yellow');
+        break;
+      case 'ground':
+        $(this.previousPosition).css('background-color', 'green');
+        break;
+      case 'line':
+      $(this.previousPosition).css('background-color', 'red');
+        break;
+      default:
+        break;
+    }*/
   }
 
 }
