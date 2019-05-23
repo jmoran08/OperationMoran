@@ -49,8 +49,8 @@ export class HomePage {
 
 		platform.ready().then(() => {
 			this.instructions = global.getInstructions();
-			var $src = $('#grid-source');
-		    var $wrap = $('<div id="grid-overlay"></div>');
+			var $src = $('#grid-source-home');
+		    var $wrap = $('<div id="grid-overlay-home"></div>');
 		    var $gsize = 40;
 
 		    var $cols = Math.ceil($src.find('img').innerWidth() / $gsize);
@@ -58,15 +58,15 @@ export class HomePage {
 
 		    // create overlay
 		    var $tbl = $('<table></table>');
-		    $tbl.addClass('positionTable');
+		    $tbl.addClass('homeGrid');
 		    for (var y = 1; y <= $rows; y++) {
 		        var $tr = $('<tr></tr>');
-		        $tr.addClass('row' + (y-1));
+		        $tr.addClass('rowHome' + (y-1));
 		        for (var x = 1; x <= $cols; x++) {
 		            var $td = $('<td></td>');
 		            $td.css('width', $gsize+'px').css('height', $gsize+'px');
 		            $td.addClass('unselected');
-		            $td.addClass('col' + (x-1));
+		            $td.addClass('colHome' + (x-1));
 		            $tr.append($td);
 		        }
 		        $tbl.append($tr);
@@ -258,7 +258,7 @@ export class HomePage {
             this.playType = "";
           }
 
-          var table = (<HTMLTableElement>$(".positionTable")[0]);
+          var table = (<HTMLTableElement>$(".homeGrid")[0]);
             var cell = table.rows[this.instructions[i].patternRow].cells[this.instructions[i].patternCol];
           var $cell = $(cell);
           switch(this.instructions[i].patternType){

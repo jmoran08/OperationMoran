@@ -240,12 +240,18 @@ export class CustomPatternSelectModalPage {
 	openCustomPatternModal(){
 	  	let chooseModal = this.modalCtrl.create('CustomPatternModalPage', {savedInstructions: this.allInstructions});
 		  chooseModal.onDidDismiss(data => {
-		     if(data != ""){
+		     if(data != "cancel"){
            this.allInstructions = [];
-		     	for(var i=0; i < data.length; i++){
-		     		this.allInstructions.push({patternType:data[i].type,patternRow:data[i].row,patternCol:data[i].col,mapId:data[i].mapId});
-		     		this.updateMade = 1;
-		     	}
+           if(data == ""){
+
+             this.updateMade = 1;
+           }
+           else{
+  		     	for(var i=0; i < data.length; i++){
+  		     		this.allInstructions.push({patternType:data[i].type,patternRow:data[i].row,patternCol:data[i].col,mapId:data[i].mapId});
+              this.updateMade = 1;
+  		     	}
+          }
 		     }
 			});
 		chooseModal.present();

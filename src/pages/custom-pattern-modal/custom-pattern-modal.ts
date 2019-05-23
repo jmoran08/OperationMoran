@@ -94,7 +94,7 @@ export class CustomPatternModalPage {
   }
 
   closeModal(){
-  	this.viewCtrl.dismiss("");
+  	this.viewCtrl.dismiss("cancel");
   }
 
   setInstructionsAndClose(){
