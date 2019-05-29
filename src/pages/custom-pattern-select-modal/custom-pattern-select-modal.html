@@ -32,6 +32,8 @@
 </ion-header>
 
 <ion-content padding class="container">
+    <ion-label class="labelClass" position="fixed" *ngIf="editMode == 1 || addMode == 1" >Pattern Name:</ion-label>
+    <ion-input class="inputClass" value="" [(ngModel)]="customPatternName" placeholder="Pattern Name" *ngIf="editMode == 1 || addMode == 1"></ion-input>
   <h2 class="header">Instructions</h2>
   <button ion-button class="fullWidthButton" color="primary" *ngIf="editMode == 0 && addMode == 0 && allInstructions.length > 0" (click) ="setPattern()">Select</button>
   <ion-card class="instructionCard" *ngFor="let instruction of allInstructions; let i=index">

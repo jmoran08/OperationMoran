@@ -25,6 +25,7 @@ export class CustomPatternSelectModalPage {
 	editMode: any;
 	updateMade: any;
 	title: any;
+  customPatternName: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sqlite: SQLite, private platform: Platform, public modalCtrl : ModalController, public viewCtrl: ViewController, public global: GlobalVars) {
 
@@ -38,11 +39,13 @@ export class CustomPatternSelectModalPage {
   		this.addMode = 0;
   		this.editMode = 0;
   		this.title = this.pattern.patternName;
+      this.customPatternName = this.pattern.patternName;
   		this.getInstructions();
   	}
   	else{
   		this.addMode = 1;
   		this.title = "New Pattern";
+      this.customPatternName = "Custom Pattern Name";
   		this.editMode = 0;
   	}
 
@@ -116,8 +119,9 @@ export class CustomPatternSelectModalPage {
 	  			db.executeSql('CREATE TABLE IF NOT EXISTS instruction(instructionId INTEGER PRIMARY KEY, pattern_id INTEGER, patternType TEXT, patternRow INT, patternCol INT, FOREIGN KEY(pattern_id) REFERENCES pattern (patternId))', [])
 			    .then((res) => {
 			    	let p = "INSERT INTO pattern VALUES (?, ?, ?)";
-			      	db.executeSql(p, [null, "Custom Pattern", 1])
+			      	db.executeSql(p, [null, this.customPatternName, 1])
 			        .then((resPattern) => {
+                this.title = this.customPatternName;
                     //There are also instructions to be added while creating new pattern
   				        	if(this.allInstructions.length > 0){
                       this.getPattern(resPattern.insertId)
@@ -127,7 +131,6 @@ export class CustomPatternSelectModalPage {
   							      db.executeSql(q, [null, resPattern.insertId,this.allInstructions[i].patternType,this.allInstructions[i].patternRow,this.allInstructions[i].patternCol])
   							        .then((res) => {
 
-
   							        }, (error) =>  {
   							          console.log("error inserting to instructions");
   							          console.log(error.message);
@@ -135,7 +138,8 @@ export class CustomPatternSelectModalPage {
   						        }
   						    }
   						    else{
-                    this.getPattern(resPattern.insertId)
+
+                    this.getPattern(resPattern.insertId);
   						    }
 				        }, (error) =>  {
 				          console.log("error inserting to pattern");
@@ -158,9 +162,11 @@ export class CustomPatternSelectModalPage {
 	      name: 'ionicdb.db',
 	      location: 'default'
 	    }).then((db: SQLiteObject) => {
-	      let p = 'UPDATE pattern SET patternName = "Name" WHERE patternId = ' + this.pattern.patternId;
+        console.log("custom pattern name: " + this.customPatternName);
+	      let p = 'UPDATE pattern SET patternName = "' + this.customPatternName + '" WHERE patternId = ' + this.pattern.patternId;
 	      db.executeSql(p, [])
 	        .then((res) => {
+            this.title = this.customPatternName;
 	        	//DELETE ALL INSTRUCTIONS BEFORE SAVING ALL - TO DO: only do if update made
 	        	console.log("update made: " + this.updateMade);
 	        	if(this.updateMade === 1){
