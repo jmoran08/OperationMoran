@@ -1,5 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { BluetoothSerial } from 'ionic-native';
 import { AlertController, LoadingController, Platform } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 import { Prebuilts } from '../prebuilts';

@@ -83,6 +83,23 @@ export class MyApp {
   alert.present();
   }
 
+  displayNoneFound(){
+    let alert = this.alertCtrl.create({
+    title: 'Enable Bluetooth',
+    message: 'Cannot find the machine. Please make sure your bluetooth is enabled and the machine is powered on.',
+    buttons: [
+      {
+        text: 'Try Again',
+        handler: () => {
+          console.log('trying connection again');
+          this.startScanning();
+        }
+      }
+    ]
+  });
+  alert.present();
+  }
+
   startScanning() {
      this.pairedDevices = null;
      BluetoothSerial.list().then((success) => {
@@ -95,12 +112,13 @@ export class MyApp {
              this.device = this.pairedDevices[i];
            }
          }
-         if(this.device.name != null){
-           this.displayAllowBluetooth(device);
-         }
-         else{
-           console.log("nothing found do not connect");
-         }
+       }
+       if(this.device != null){
+         this.displayAllowBluetooth();
+       }
+       else{
+         console.log("nothing found do not connect");
+         this.displayNoneFound();
        }
      },
        (err) => {
@@ -156,7 +174,6 @@ export class MyApp {
          text: 'Disconnect',
          handler: () => {
            BluetoothSerial.disconnect();
-           this.gettingDevices=null;
          }
        }
      ]
