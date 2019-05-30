@@ -13,6 +13,7 @@ import { GlobalVars } from '../pages/global'
 export class MyApp {
   rootPage:any = TabsPage;
   pairedDevices: any;
+  device: any;
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, modalCtrl: ModalController, public global: GlobalVars, private alertCtrl: AlertController) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -27,8 +28,31 @@ export class MyApp {
     });
   }
 
-  displayAllowBluetooth(device: any){
-    var device;
+  showNoBluetoothWarning(){
+    let alert = this.alertCtrl.create({
+    title: 'Warning',
+    message: 'You must connect to the machine to utilize full capability of this application.',
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+          console.log('cancelled even after warning');
+        }
+      },
+      {
+        text: 'Connect',
+        handler: () => {
+          console.log('connecting');
+          this.displayAllowBluetooth();
+        }
+      }
+    ]
+  });
+  alert.present();
+  }
+
+  displayAllowBluetooth(){
     let alert = this.alertCtrl.create({
     title: 'Connect to Machine',
     message: 'Connect bluetooth to Field Machine?',
@@ -38,13 +62,14 @@ export class MyApp {
         role: 'cancel',
         handler: () => {
           console.log('cancelled connection');
+          this.showNoBluetoothWarning();
         }
       },
       {
         text: 'Connect',
         handler: () => {
           console.log('connecting');
-          BluetoothSerial.connect(device.id).subscribe((success) => {
+          BluetoothSerial.connect(this.device.id).subscribe((success) => {
                 console.log("connected bluetooth success");
           },
           (err) => {
@@ -59,7 +84,6 @@ export class MyApp {
   }
 
   startScanning() {
-     var device = null;
      this.pairedDevices = null;
      BluetoothSerial.list().then((success) => {
        console.log("bluetooth scan succeses");
@@ -68,10 +92,10 @@ export class MyApp {
          for(var i = 0; i < this.pairedDevices.length; i++){
            console.log("paired device name: " + this.pairedDevices[i].name);
            if(this.pairedDevices[i].name === "HMSoft"){
-             device = this.pairedDevices[i];
+             this.device = this.pairedDevices[i];
            }
          }
-         if(device.name != null){
+         if(this.device.name != null){
            this.displayAllowBluetooth(device);
          }
          else{
