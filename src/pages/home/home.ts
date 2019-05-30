@@ -1,6 +1,5 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { BluetoothSerial } from 'ionic-native';
 import { AlertController, LoadingController, Platform } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 import { Prebuilts } from '../prebuilts';
@@ -85,77 +84,8 @@ export class HomePage {
 	  $('#myButton').text('white');
 	}
 
-	 startScanning() {
-	    this.pairedDevices = null;
-	    this.gettingDevices = true;
-	    BluetoothSerial.list().then((success) => {
-        console.log("bluetooth scan succeses");
-	      this.pairedDevices = success;
-	      this.showPairedDevices = true;
-	    },
-	      (err) => {
-          console.log("Bluetooth scan error: " + err.message);
-	      })
-	}
-
 	success = (data) => alert(data);
 	fail = (error) => alert(error);
-
-	selectDevice(address: any, name: any) {
-		console.log("giving bluetooth options");
-		let alert = this.alertCtrl.create({
-		  title: 'Connect',
-		  message: 'Do you want to connect with' + name + '?',
-		  buttons: [
-		    {
-		      text: 'Cancel',
-		      role: 'cancel',
-		      handler: () => {
-		        console.log('Cancel clicked');
-		      }
-		    },
-		    {
-		      text: 'Connect',
-		      handler: () => {
-		        BluetoothSerial.connect(address).subscribe((success) => {
-          console.log("connected bluetooth success");
-		},
-		  (err) => {
-        console.log("Connect to bluetooth error: " + err.message);
-		  })
-
-		      }
-		    }
-		  ]
-		});
-		alert.present(
-
-		);
-	}
-
-	disconnect() {
-		let alert = this.alertCtrl.create({
-		  title: 'Disconnect?',
-		  message: 'Do you want to Disconnect?',
-		  buttons: [
-		    {
-		      text: 'Cancel',
-		      role: 'cancel',
-		      handler: () => {
-		        alert.dismiss();
-		      }
-		    },
-		    {
-		      text: 'Disconnect',
-		      handler: () => {
-		        BluetoothSerial.disconnect();
-		        this.gettingDevices=null;
-		      }
-		    }
-		  ]
-		});
-		alert.present();
-	}
 
 	next(){
 		this.navCtrl.push('TerminalPage');
