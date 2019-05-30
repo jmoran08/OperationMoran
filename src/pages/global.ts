@@ -38,10 +38,10 @@ export class GlobalVars {
 		return this.instructions;
 	}
 	getArduinoInfo(row: any, col: any, type: any){
-		var result = {};
+		var result = [];
 		for(var i = 0; i < this.arduinoInfo.length; i++){
 			if(this.arduinoInfo[i].row === row && this.arduinoInfo[i].col === col && this.arduinoInfo[i].type === type){
-				result = {row: row, col: col, type: type, servo: this.arduinoInfo[i].servo, linear: this.arduinoInfo[i].linear, psi: this.arduinoInfo[i].psi};
+				result.push({row: row, col: col, type: type, servo: this.arduinoInfo[i].servo, linear: this.arduinoInfo[i].linear, psi: this.arduinoInfo[i].psi});
 			}
 		}
 		return result;

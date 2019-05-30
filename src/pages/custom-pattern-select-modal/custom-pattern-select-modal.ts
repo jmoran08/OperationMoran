@@ -74,7 +74,7 @@ export class CustomPatternSelectModalPage {
             //find matching angles and PSI
             var mapInfo = [];
             mapInfo = this.global.getArduinoInfo(res.rows.item(i).patternRow,res.rows.item(i).patternCol, res.rows.item(i).patternType);
-		        this.allInstructions.push({instructionId:res.rows.item(i).instructionId,patternName: res.rows.item(i).pattern_id, patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol,servo: mapInfo.servo,linear:mapInfo.linear,psi:mapInfo.psi});
+		        this.allInstructions.push({instructionId:res.rows.item(i).instructionId,patternName: res.rows.item(i).pattern_id, patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol,servo: mapInfo[0].servo,linear:mapInfo[0].linear,psi:mapInfo[0].psi});
             console.log("after assign servo: " + this.allInstructions[i].servo);
           }
 		      	this.editMode = 0;
