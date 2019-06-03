@@ -20,11 +20,11 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       //splashScreen.hide()
-      let splash = modalCtrl.create(SplashPage);
-           splash.present();
+      //let splash = modalCtrl.create(SplashPage);
+           //splash.present();
 
       this.global.setArduinoInfo();
-      this.startScanning();
+      this.startScanning(1);
     });
   }
 
@@ -34,7 +34,7 @@ export class MyApp {
     message: 'You must connect to the machine to utilize full capability of this application.',
     buttons: [
       {
-        text: 'Cancel',
+        text: 'Ok',
         role: 'cancel',
         handler: () => {
           console.log('cancelled even after warning');
@@ -69,12 +69,17 @@ export class MyApp {
         text: 'Connect',
         handler: () => {
           console.log('connecting');
-          BluetoothSerial.connect(this.device.id).subscribe((success) => {
-                console.log("connected bluetooth success");
-          },
-          (err) => {
-            console.log("Connect to bluetooth error: " + err.message);
-          })
+          if(this.device != null){
+            BluetoothSerial.connect(this.device.id).subscribe((success) => {
+                  console.log("connected bluetooth success");
+            },
+            (err) => {
+              console.log("Connect to bluetooth error: " + err.message);
+            })
+          }
+          else{
+            this.displayNoneFound();
+          }
 
         }
       }
@@ -89,6 +94,13 @@ export class MyApp {
     message: 'Cannot find the machine. Please make sure your bluetooth is enabled and the machine is powered on.',
     buttons: [
       {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+          console.log('cancelled try again');
+        }
+      },
+      {
         text: 'Try Again',
         handler: () => {
           console.log('trying connection again');
@@ -100,7 +112,7 @@ export class MyApp {
   alert.present();
   }
 
-  startScanning() {
+  startScanning(initial: int) {
      this.pairedDevices = null;
      BluetoothSerial.list().then((success) => {
        console.log("bluetooth scan succeses");
@@ -113,13 +125,14 @@ export class MyApp {
            }
          }
        }
-       if(this.device != null){
-         this.displayAllowBluetooth();
-       }
-       else{
-         console.log("nothing found do not connect");
-         this.displayNoneFound();
-       }
+       if(this.device != null || initial > 0){
+          this.displayAllowBluetooth();
+        }
+        else{
+          console.log("nothing found do not connect");
+          this.displayNoneFound();
+        }
+
      },
        (err) => {
          console.log("Bluetooth scan error: " + err.message);
