@@ -261,10 +261,10 @@ export class HomePage {
 	}
 
 	displayNoInstructionsPopup() {
-	    const alert = this.alertCtrl.create({
+	    let alert = this.alertCtrl.create({
 	      title: 'Select Play Type',
-	      subTitle: 'You must select a play type for the machine to run.',
-	      buttons: ['OK'],
+	      message: 'You must select a play type for the machine to run.',
+	      buttons: [{text: 'Ok', cssClass: 'alertSuccessButton'}],
         cssClass: 'alertCustomCss'
 	    });
 	    alert.present();

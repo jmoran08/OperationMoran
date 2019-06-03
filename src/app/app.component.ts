@@ -38,16 +38,19 @@ export class MyApp {
         role: 'cancel',
         handler: () => {
           console.log('cancelled even after warning');
-        }
+        },
+        cssClass: 'alertCancelButton'
       },
       {
         text: 'Connect',
         handler: () => {
           console.log('connecting');
           this.displayAllowBluetooth();
-        }
+        },
+        cssClass: 'alertSuccessButton'
       }
-    ]
+    ],
+    cssClass: 'alertCustomCss'
   });
   alert.present();
   }
@@ -63,7 +66,8 @@ export class MyApp {
         handler: () => {
           console.log('cancelled connection');
           this.showNoBluetoothWarning();
-        }
+        },
+        cssClass: 'alertCancelButton'
       },
       {
         text: 'Connect',
@@ -81,9 +85,11 @@ export class MyApp {
             this.displayNoneFound();
           }
 
-        }
+        },
+        cssClass: 'alertSuccessButton'
       }
-    ]
+    ],
+    cssClass: 'alertCustomCss'
   });
   alert.present();
   }
@@ -98,21 +104,24 @@ export class MyApp {
         role: 'cancel',
         handler: () => {
           console.log('cancelled try again');
-        }
+        },
+        cssClass: 'alertCancelButton'
       },
       {
         text: 'Try Again',
         handler: () => {
           console.log('trying connection again');
-          this.startScanning();
-        }
+          this.startScanning(0);
+        },
+        cssClass: 'alertSuccessButton'
       }
-    ]
+    ],
+    cssClass: 'alertCustomCss'
   });
   alert.present();
   }
 
-  startScanning(initial: int) {
+  startScanning(initial: any) {
      this.pairedDevices = null;
      BluetoothSerial.list().then((success) => {
        console.log("bluetooth scan succeses");
@@ -150,21 +159,24 @@ export class MyApp {
          role: 'cancel',
          handler: () => {
            console.log('Cancel clicked');
-         }
+         },
+         cssClass: 'alertCancelButton'
        },
        {
          text: 'Connect',
          handler: () => {
            BluetoothSerial.connect(address).subscribe((success) => {
-         console.log("connected bluetooth success");
-   },
-     (err) => {
-       console.log("Connect to bluetooth error: " + err.message);
-     })
+                 console.log("connected bluetooth success");
+           },
+           (err) => {
+             console.log("Connect to bluetooth error: " + err.message);
+           })
 
-         }
+         },
+         cssClass: 'alertSuccessButton'
        }
-     ]
+     ],
+     cssClass: 'alertCustomCss'
    });
    alert.present(
 
