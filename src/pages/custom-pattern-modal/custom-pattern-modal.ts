@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams} from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Select} from 'ionic-angular';
 import { ViewController, PopoverController } from 'ionic-angular';
 import { GlobalVars } from '../global'
 
@@ -22,6 +22,7 @@ export class CustomPatternModalPage {
 	previousPosition: any;
 	previousRow: any;
 	play: any;
+  playType: any;
 	instructions: any;
   @ViewChild('mySelect') selectRef: Select;
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public popoverCtrl: PopoverController, public global: GlobalVars) {
