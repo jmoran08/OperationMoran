@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams} from 'ionic-angular';
 import { ViewController, PopoverController } from 'ionic-angular';
 import { GlobalVars } from '../global'
@@ -23,7 +23,7 @@ export class CustomPatternModalPage {
 	previousRow: any;
 	play: any;
 	instructions: any;
-
+  @ViewChild('mySelect') selectRef: Select;
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public popoverCtrl: PopoverController, public global: GlobalVars) {
     this.instructions = [];
     var paramInstructions = this.navParams.get('savedInstructions');
@@ -86,7 +86,7 @@ export class CustomPatternModalPage {
         $(e.currentTarget).addClass('selected');
         this.previousPosition = $(e.currentTarget);
       	this.previousRow = $(e.currentTarget).parent();
-      	this.positionSelected();
+        this.selectRef.open();
       }
     });
     this.showSavedInstructions();
@@ -101,20 +101,14 @@ export class CustomPatternModalPage {
   	//this.global.setInstructions(this.instructions);
   	this.viewCtrl.dismiss(this.instructions);
   }
-
-  positionSelected(){
-  	const popover = this.popoverCtrl.create('PlayTypeSelectionPage');
-    popover.present();
-    popover.onDidDismiss(data => {
-    	if(data != ""){
-			this.play = data;
+  onPlaySelect(){
+			this.play = this.playType;
 			this.addInstruction();
-    	}
-      else{
-        this.previousPosition.removeClass('selected');
-    		this.previousPosition.addClass('unselected');
-      }
-	});
+  }
+
+  onPlaySelectCancel(){
+    this.previousPosition.removeClass('selected');
+    this.previousPosition.addClass('unselected');
   }
 
   addInstruction(){
