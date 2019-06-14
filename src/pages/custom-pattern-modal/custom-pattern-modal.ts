@@ -126,13 +126,13 @@ export class CustomPatternModalPage {
 		});;
     $(this.previousPosition).html(this.instructions.length);
     switch(this.play){
-      case 'fly':
+      case 'Fly Ball':
         $(this.previousPosition).css('background-color', 'yellow');
         break;
-      case 'ground':
+      case 'Ground Ball':
         $(this.previousPosition).css('background-color', 'green');
         break;
-      case 'line':
+      case 'Line Drive':
       $(this.previousPosition).css('background-color', 'red');
         break;
       default:
@@ -151,13 +151,13 @@ export class CustomPatternModalPage {
       square = $('tr.row' + this.instructions[i].row).find('td.col' + this.instructions[i].col);
       square.html(i+1);
       switch(this.instructions[i].type){
-        case 'fly':
+        case 'Fly Ball':
           square.css('background-color', 'yellow');
           break;
-        case 'ground':
+        case 'Ground Ball':
           square.css('background-color', 'green');
           break;
-        case 'line':
+        case 'Line Drive':
         square.css('background-color', 'red');
           break;
         default:
@@ -174,13 +174,13 @@ export class CustomPatternModalPage {
         square.addClass('selected');
         square.html(i+1);
         switch(this.instructions[i].type){
-          case 'fly':
+          case 'Fly Ball':
             square.css('background-color', 'yellow');
             break;
-          case 'ground':
+          case 'Ground Ball':
             square.css('background-color', 'green');
             break;
-          case 'line':
+          case 'Line Drive':
           square.css('background-color', 'red');
             break;
           default:

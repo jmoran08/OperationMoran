@@ -42,7 +42,7 @@ export class HomePage {
 	readyToPlay: Boolean;
   coordinatesSent: Boolean;
   arduinoDone: Boolean;
-
+  displayAction: any;
 	constructor(public loadCtrl:LoadingController, private alertCtrl: AlertController, public navCtrl: NavController, private ngZone: NgZone, public modalCtrl: ModalController, private platform: Platform, public prebuilts: Prebuilts, public global: GlobalVars) {
 		this.readyToPlay = true;
     this.arduinoDone = false;
@@ -179,6 +179,7 @@ export class HomePage {
         }
         else if((!this.playing && this.stopped) || waitUntilDone){
           console.log("in stop mode new play");
+          this.displayAction = "";
           break;
         }
         else{
@@ -188,20 +189,20 @@ export class HomePage {
             this.previousPosition.css('background-color', 'transparent');
             this.playType = "";
           }
-
+          this.displayAction = this.instructions[i].patternType + " " + this.instructions[i].position;
           var table = (<HTMLTableElement>$(".homeGrid")[0]);
             var cell = table.rows[this.instructions[i].patternRow].cells[this.instructions[i].patternCol];
           var $cell = $(cell);
           switch(this.instructions[i].patternType){
-            case "ground":
+            case "Ground Ball":
               color = "green";
               this.playType = "Ground Ball";
               break;
-            case "fly":
+            case "Fly Ball":
               color = "yellow";
               this.playType = "Fly Ball";
               break;
-            case "line":
+            case "Line Drive":
               color = "red";
               this.playType = "Line Drive";
               break;
@@ -228,6 +229,7 @@ export class HomePage {
       this.previous = false;
       this.previousPosition.css('background-color', 'transparent');
       this.playType = "";
+      this.displayAction = "";
     }
   }
 

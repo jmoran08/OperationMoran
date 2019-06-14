@@ -20,9 +20,14 @@
 <ion-content padding class="container">
 	<div id="field-grid-source"><img class="fieldImage" src="../assets/imgs/FieldTemplate-NoBackground-GreenLines-GreyInfield-BlackOutfield.png"></div>
 	<button ion-button class="fullWidthButton greenButton" (click) ="setInstructionsAndClose()">Add</button>
-  <ion-select [(ngModel)]="playType" [hidden]='true' (ionCancel)="onPlaySelectCancel()" (ionChange)="onPlaySelect()" #mySelect>
+  <ion-select interface="popover" [(ngModel)]="playType" [hidden]='true' (ionCancel)="onPlaySelectCancel()" (ionChange)="onPlaySelect()" #mySelect>
+      <ion-option value="Ground Ball">Ground Ball</ion-option>
+      <ion-option value="Line Drive">Line Drive</ion-option>
+      <ion-option value="Fly Ball">Fly Ball</ion-option>
+  </ion-select>
+  <!--<ion-select interface="action-sheet" [(ngModel)]="playType" [hidden]='true' (ionCancel)="onPlaySelectCancel()" (ionChange)="onPlaySelect()" #mySelect>
       <ion-option value="ground">Ground Ball</ion-option>
       <ion-option value="line">Line Drive</ion-option>
       <ion-option value="fly">Fly Ball</ion-option>
-  </ion-select>
+  </ion-select>-->
 </ion-content>

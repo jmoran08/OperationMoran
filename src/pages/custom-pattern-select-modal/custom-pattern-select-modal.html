@@ -32,17 +32,15 @@
 </ion-header>
 
 <ion-content padding class="container">
-    <ion-label class="labelClass" position="fixed" *ngIf="editMode == 1 || addMode == 1" >Pattern Name:</ion-label>
+    <h2 class="labelClass" position="fixed" *ngIf="editMode == 1 || addMode == 1" >Pattern Name:</h2>
     <ion-input class="inputClass" value="" [(ngModel)]="customPatternName" placeholder="Pattern Name" *ngIf="editMode == 1 || addMode == 1"></ion-input>
   <h2 class="header">Instructions</h2>
   <button ion-button class="fullWidthButton" color="primary" *ngIf="editMode == 0 && addMode == 0 && allInstructions.length > 0" (click) ="setPattern()">Select</button>
   <ion-card class="instructionCard" *ngFor="let instruction of allInstructions; let i=index">
     <ion-card-header>
       <ion-card-title class="title">
-        Id: {{instruction.instructionId}}
-        Type: {{instruction.patternType}}
-        Row: {{instruction.patternRow}}
-        Col: {{instruction.patternCol}}
+        {{instruction.patternType}} 
+        {{instruction.position}}
       <button class="cardButton">
         <ion-icon name="remove-circle" *ngIf="editMode == 1 || addMode == 1" (click)="deleteOneInstruction(instruction.instructionId)"></ion-icon>
       </button>

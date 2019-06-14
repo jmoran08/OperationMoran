@@ -74,7 +74,7 @@ export class CustomPatternSelectModalPage {
             //find matching angles and PSI
             var mapInfo = [];
             mapInfo = this.global.getArduinoInfo(res.rows.item(i).patternRow,res.rows.item(i).patternCol, res.rows.item(i).patternType);
-		        this.allInstructions.push({instructionId:res.rows.item(i).instructionId,patternName: res.rows.item(i).pattern_id, patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol,servo: mapInfo[0].servo,linear:mapInfo[0].linear,psi:mapInfo[0].psi});
+		        this.allInstructions.push({instructionId:res.rows.item(i).instructionId,patternName: res.rows.item(i).pattern_id, patternType:res.rows.item(i).patternType,patternRow:res.rows.item(i).patternRow,patternCol:res.rows.item(i).patternCol,servo: mapInfo[0].servo,linear:mapInfo[0].linear,psi:mapInfo[0].psi,position:mapInfo[0].position});
             console.log("after assign servo: " + this.allInstructions[i].servo);
           }
 		      	this.editMode = 0;
@@ -254,7 +254,10 @@ export class CustomPatternSelectModalPage {
            }
            else{
   		     	for(var i=0; i < data.length; i++){
-  		     		this.allInstructions.push({patternType:data[i].type,patternRow:data[i].row,patternCol:data[i].col,mapId:data[i].mapId});
+              console.log("about to get arduino info");
+              var mapInfo = [];
+              mapInfo = this.global.getArduinoInfo(data[i].row,data[i].col, data[i].type);
+  		     		this.allInstructions.push({patternType:data[i].type,patternRow:data[i].row,patternCol:data[i].col,mapId:data[i].mapId,position:mapInfo[0].position});
               this.updateMade = 1;
   		     	}
           }

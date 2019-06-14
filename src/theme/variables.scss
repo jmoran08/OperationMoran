@@ -38,8 +38,10 @@ $colors: (
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #222,
+  lighterGreen:    #22E649
 );
+
 
 $toolbar-background: black;
 
@@ -48,6 +50,18 @@ $tabs-background: black;
 $button-md-background-color-activated: red;
 $button-md-background-color-hover:     red;
 
+$alert-ios-background: grey;
+$alert-ios-radio-label-text-color: white;
+$alert-ios-radio-icon-border-color: color($colors, lighterGreen);
+$alert-ios-button-background-color: green;
+$alert-ios-button-text-color: white;
+$alert-ios-radio-label-text-color-checked: color($colors, lighterGreen);
+
+//can't figure out how to change the color of the selected button
+$action-sheet-ios-button-background: grey;
+$action-sheet-ios-button-background-activated: green;
+$action-sheet-ios-button-cancel-background: lightGrey;
+$action-sheet-ios-button-text-color: white;
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
